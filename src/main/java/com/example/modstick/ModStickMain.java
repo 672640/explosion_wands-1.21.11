@@ -21,7 +21,10 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.TntBlock;
+import net.minecraft.world.level.gamerules.GameRules;
 
 public class ModStickMain implements ModInitializer {
 	public static final String MOD_ID = "modstick";
@@ -48,7 +51,6 @@ public class ModStickMain implements ModInitializer {
 		PrimedTnt primedTnt = new PrimedTnt(level, clickedPos.getX() + 0.5, clickedPos.getY(), clickedPos.getZ() + 0.5, player);
 
 		//FireChargeItem fireChargeItem = new FireChargeItem(new Item.Properties());
-
 		if (level instanceof ServerLevel serverLevel && serverLevel.getBlockState(clickedPos).canBeReplaced() && player != null) {
 			//TNT explodes after 0 ticks (instantly)
 			primedTnt.setFuse(0);
