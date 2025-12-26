@@ -10,23 +10,18 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.TntBlock;
-import net.minecraft.world.level.gamerules.GameRules;
 
-public class ModStickMain implements ModInitializer {
+public class ModStickClickBlock implements ModInitializer {
 	public static final String MOD_ID = "modstick";
 
 	@Override
@@ -37,7 +32,7 @@ public class ModStickMain implements ModInitializer {
 	private static ResourceKey<Item> modItemId(final String name) {
 		return ResourceKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(MOD_ID, name));
 	}
-
+	//Hits a block
 	public static InteractionResult useOn(ModStickItem modStickItem, UseOnContext context)  {
 
 		BlockPlaceContext placeContext = new BlockPlaceContext(context);
@@ -45,7 +40,6 @@ public class ModStickMain implements ModInitializer {
 		Level level = context.getLevel();
 		Player player = context.getPlayer();
 		PrimedTnt primedTnt = new PrimedTnt(level, clickedPos.getX() + 0.5, clickedPos.getY(), clickedPos.getZ() + 0.5, player);
-
 
 		//FireChargeItem fireChargeItem = new FireChargeItem(new Item.Properties());
 		if (level instanceof ServerLevel serverLevel && serverLevel.getBlockState(clickedPos).canBeReplaced() && player != null) {
@@ -63,14 +57,14 @@ public class ModStickMain implements ModInitializer {
 			return InteractionResult.CONSUME;
 		}
 	}
-
+	//Use animation of item
 	public static ItemUseAnimation useAnimation(Item item, ItemStack itemStack) {
 		Consumable consumable = (Consumable)itemStack.get(DataComponents.CONSUMABLE);
 		return ItemUseAnimation.BLOCK;
 	}
-
+	//How fast we can use the item
 	public static int useDuration(Item item, ItemStack itemStack, LivingEntity user) {
-		//2 tick cooldown per usage (20 ticks per second)
+		//2 tick cooldown when block hit
 		return 2;
 	}
 }

@@ -16,7 +16,7 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"com.example.modstick.ModStickMain"
+			"com.example.modstick.ModStickClickBlock"
 		]
 	},
 	"mixins": [

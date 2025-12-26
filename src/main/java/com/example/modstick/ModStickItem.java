@@ -17,22 +17,25 @@ public class ModStickItem extends Item {
         super(properties);
     }
 
+    //Hit a block
     @Override
     public InteractionResult useOn(UseOnContext context) {
-        return ModStickMain.useOn(this, context);
+        return ModStickClickBlock.useOn(this, context);
     }
 
+    //Use animation of item
     @Override
     public ItemUseAnimation getUseAnimation(ItemStack itemStack) {
-        return ModStickMain.useAnimation(this, itemStack);
+        return ModStickClickBlock.useAnimation(this, itemStack);
     }
 
     //How fast we can use the item
     @Override
     public int getUseDuration(ItemStack itemStack, LivingEntity user) {
-        return ModStickMain.useDuration(this, itemStack, user);
+        return ModStickClickBlock.useDuration(this, itemStack, user);
     }
 
+    //Hit air, water or entity
     @Override
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
         if (!level.isClientSide()) {
