@@ -1,4 +1,4 @@
-package com.example.modstick;
+package com.fireball_stick;
 
 import net.fabricmc.api.ModInitializer;
 
@@ -21,19 +21,19 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 
-public class ModStickClickBlock implements ModInitializer {
-	public static final String MOD_ID = "modstick";
+public class FireballStickClickBlock implements ModInitializer {
+	public static final String MOD_ID = "fireball_stick";
 
 	@Override
 	public void onInitialize() {
-		Items.registerItem(modItemId("mod_stick"), ModStickItem::new, new Item.Properties());
+		Items.registerItem(modItemId("fireball_stick"), FireballStickItem::new, new Item.Properties());
 	}
 
 	private static ResourceKey<Item> modItemId(final String name) {
 		return ResourceKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(MOD_ID, name));
 	}
 	//Hits a block
-	public static InteractionResult useOn(ModStickItem modStickItem, UseOnContext context)  {
+	public static InteractionResult useOn(FireballStickItem FireballStickItem, UseOnContext context)  {
 
 		BlockPlaceContext placeContext = new BlockPlaceContext(context);
 		BlockPos clickedPos = placeContext.getClickedPos();
@@ -50,8 +50,7 @@ public class ModStickClickBlock implements ModInitializer {
 			//Player animation of using the item
 			player.startUsingItem(context.getHand());
 			//Plays a sound when placed
-			level.playSound((Entity) null, clickedPos.getX() + 0.5, clickedPos.getY(), clickedPos.getZ() + 0.5, SoundEvents.VILLAGER_DEATH, SoundSource.NEUTRAL, 1.0F, 1.0F);
-
+			level.playSound((Entity) null, clickedPos.getX() + 0.5, clickedPos.getY(), clickedPos.getZ() + 0.5, SoundEvents.GENERIC_EXPLODE, SoundSource.PLAYERS, 1.0F, 1.0F);
 			return InteractionResult.SUCCESS;
 		} else {
 			return InteractionResult.CONSUME;

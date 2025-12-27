@@ -1,4 +1,4 @@
-package com.example.modstick.mixin;
+package com.fireball_stick.mixin;
 
 import net.minecraft.server.MinecraftServer;
 import org.spongepowered.asm.mixin.Mixin;
