@@ -21,12 +21,14 @@ import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static net.minecraft.world.entity.EntityType.TNT;
 import static net.minecraft.world.item.Items.registerItem;
-
 public class FireballStickClickBlock implements ModInitializer {
 	public static final String MOD_ID = "fireball_stick";
+	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
 	@Override
 	public void onInitialize() {
