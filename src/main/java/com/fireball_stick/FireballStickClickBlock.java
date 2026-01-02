@@ -21,8 +21,11 @@ import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.TimeUnit;
 
 import static net.minecraft.world.entity.EntityType.TNT;
 import static net.minecraft.world.item.Items.registerItem;
@@ -41,23 +44,57 @@ public class FireballStickClickBlock implements ModInitializer {
 
 	//Hits a block
 	public static InteractionResult useOn(FireballStickItem FireballStickItem, UseOnContext context)  {
-
+		//Default TNT explode timer: 80 ticks
+		int timeBetweenEachTntPlacement = 30; //milliseconds
+		int tntAmount = 50;
+		//50 ms = 1 tick
+		int tntFuseTimer = (tntAmount * timeBetweenEachTntPlacement) / 50 ; //ticks
+		//360 degrees or 2 PI = full circle
 		BlockPlaceContext placeContext = new BlockPlaceContext(context);
 		BlockPos clickedPos = placeContext.getClickedPos();
 		Level level = context.getLevel();
 		Player player = context.getPlayer();
-		PrimedTnt primedTnt = new PrimedTnt(level, clickedPos.getX() + 0.5, clickedPos.getY(), clickedPos.getZ() + 0.5, player);
 		//FireChargeItem fireChargeItem = new FireChargeItem(new Item.Properties());
-		if (level instanceof ServerLevel serverLevel && serverLevel.getBlockState(clickedPos).canBeReplaced() && player != null) {
-			//TNT explodes after 0 ticks (instantly)
-			primedTnt.setFuse(0);
-			//Adds the primed TNT to the world
-			serverLevel.addFreshEntity(primedTnt);
-			//serverLevel.explode(serverLevel.getEntity(), clickedPos.getX(), clickedPos.getY(), clickedPos.getZ());
-			//Player animation of using the item
-			player.startUsingItem(context.getHand());
+		if (level instanceof ServerLevel serverLevel &&
+				serverLevel.getBlockState(clickedPos).canBeReplaced() && player != null) {
+			//serverLevel.explode(primedTnt, clickedPos.getX(), clickedPos.getY(), clickedPos.getZ(),
+					//explosionPowerBlock, ServerLevel.ExplosionInteraction.BLOCK);
+			if(!level.isClientSide()) {
+				//full circle = 2 PI
+				double halfCircleSine = Math.toRadians(2 * Math.PI / ((double) tntAmount / 2));
+				double halfCircleCos = Math.toRadians(2 * Math.PI / ((double) tntAmount / 2));
+				int i;
+				double changePosition = 1;
+				for (i = 0; i < tntAmount; i++) {
+					Vec3 playerLookDir = player.getLookAngle();
+					double xDir = clickedPos.getX();
+					double yDir = clickedPos.getY();
+					double zDir = clickedPos.getZ();
+					PrimedTnt primedTnt = new PrimedTnt(level,
+							xDir + halfCircleSine + halfCircleCos,
+							yDir,
+							zDir + changePosition,
+							player);
+						primedTnt.setFuse(tntFuseTimer);
+						serverLevel.addFreshEntity(primedTnt);
+						changePosition = changePosition + 3;
+						if(halfCircleSine <= Math.PI && halfCircleSine >= 0) {
+							halfCircleSine = halfCircleSine + tntAmount - (tntAmount + i);
+							halfCircleCos = 0;
+						}
+						else if(halfCircleSine > Math.PI && halfCircleSine < 2 * Math.PI) {
+							halfCircleCos = halfCircleSine + tntAmount - (tntAmount + i);
+							halfCircleSine = 0;
+						}
+					try {
+						TimeUnit.MILLISECONDS.sleep(timeBetweenEachTntPlacement);
+					} catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+			}
 			//Plays a sound when placed
-			level.playSound((Entity) null, clickedPos.getX(), clickedPos.getY(), clickedPos.getZ(), SoundEvents.GENERIC_EXPLODE, SoundSource.PLAYERS, 1.0F, 1.0F);
+			//level.playSound((Entity) null, clickedPos.getX(), clickedPos.getY(), clickedPos.getZ(), SoundEvents.GENERIC_EXPLODE, SoundSource.PLAYERS, 1.0F, 1.0F);
 			return InteractionResult.SUCCESS;
 		} else {
 			return InteractionResult.CONSUME;
@@ -70,7 +107,7 @@ public class FireballStickClickBlock implements ModInitializer {
 	}
 	//How fast we can use the item
 	public static int useDuration(Item item, ItemStack itemStack, LivingEntity user) {
-		//2 tick cooldown when block hit
-		return 2;
+		//cooldown for next block hit
+		return 20;
 	}
 }

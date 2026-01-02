@@ -75,7 +75,6 @@ public class FireballStickClickAir extends Item {
             Entity target = entityHitResult.getEntity();
             //Changes the fireball's position to the position of the entity we clicked on
             Vec3 fireballOnEntityPosition = target.position();
-            //fireballAir.setDeltaMovement(playerLookDir.scale(0.0001));
             //Teleports the fireball into the entity
             fireballAir.moveOrInterpolateTo(fireballOnEntityPosition);
             //Evil fake fireball explosion
@@ -83,6 +82,7 @@ public class FireballStickClickAir extends Item {
                     explosionPowerEntity, Level.ExplosionInteraction.MOB);
             //Fireball is fake now, discards it when spawned so it doesn't appear after exploding
             fireballAir.discard();
+            //Might add a sound effect later
             //level.playSound(null, dirX + 0.5, dirY, dirZ + 0.5, SoundEvents.PIG_DEATH, SoundSource.NEUTRAL, 1.0F, 1.0F);
             return fireballAir;
         } else {
@@ -91,3 +91,8 @@ public class FireballStickClickAir extends Item {
     }
 }
 
+//TODO:
+//Remove the fire shooting the projectile causes to improve performance
+//Make it be able to destroy bedrock or any other block
+//Make it so that it can spawn and shoot out other types of entities (maybe a different item)
+//Make it so we can explode mountable entities
