@@ -17,6 +17,9 @@
 	"entrypoints": {
 		"main": [
           "com.fireball_stick.initialization.ModInitialization"
+		],
+		"client": [
+			"com.fireball_stick.client.ClientInitialization"
 		]
 	},
 	"mixins": [

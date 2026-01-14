@@ -1,5 +1,7 @@
 package com.fireball_stick.tnt_stick;
 
+import com.fireball_stick.customFunctions.CustomTnt;
+import com.fireball_stick.entity.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
@@ -8,6 +10,8 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.player.Player;
@@ -16,6 +20,7 @@ import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -52,6 +57,9 @@ public class TNTStickClickBlock {
 		Player player = context.getPlayer();
 
 		if (level instanceof ServerLevel serverLevel && player != null && !level.isClientSide()) {
+			float explosionPower = 5F;
+			double defaultGravity = 0.04;
+			boolean explodeOnContact = false;
 			double xDir = clickedPos.getX();
 			double yDir = clickedPos.getY();
 			double zDir = clickedPos.getZ();
@@ -74,20 +82,21 @@ public class TNTStickClickBlock {
 					//Adds one primed TNT based on the tickCounter
 					add(() -> {
 						//Creates primed TNTs every iteration
-						PrimedTnt primedTnt = new PrimedTnt(level,
-								//X dir: cos, Z dir: sin, makes a circle
-								xDir + (Math.cos(angle[0]) * amplitude),
+						CustomTnt customTnt = ModEntities.CUSTOM_TNT.create(level, EntitySpawnReason.TRIGGERED);
+						//X dir: cos, Z dir: sin, makes a circle
+						customTnt.setPos(xDir + (Math.cos(angle[0]) * amplitude),
 								yDir + 3 + Math.cos(changePosition[0]) * 5,
-								zDir + (Math.sin(angle[0]) * amplitude),
-								player);
-						primedTnt.setFuse(tntFuseTimer);
+								zDir + (Math.sin(angle[0]) * amplitude));
+						customTnt.setFuse(tntFuseTimer);
 						//Adds the primed TNT to the world
-						serverLevel.addFreshEntity(primedTnt);
+						serverLevel.addFreshEntity(customTnt);
 						//Performance improvement: Spawns a particle effect on each TNT that satisfy the modulus criteria instead of on each TNT
 						if((finalI % 6) == 1) {
 							//Particles only spawn 32 blocks away from the player. Might bypass in future
-							serverLevel.sendParticles(ParticleTypes.COPPER_FIRE_FLAME, primedTnt.getX(), primedTnt.getY(), primedTnt.getZ(), 700, randomDistr, randomDistr, randomDistr, 1);
+							serverLevel.sendParticles(ParticleTypes.COPPER_FIRE_FLAME, customTnt.getX(), customTnt.getY(), customTnt.getZ(), 700, randomDistr, randomDistr, randomDistr, 1);
 						}
+						customTnt.setExplosionPower(explosionPower);
+						customTnt.setExplodeOnContact(explodeOnContact);
 						//Changes the initial angle by the value of angleStep every iteration so the TNTs are not static
 						angle[0] += angleStep;
 						//Height of the cos curve every iteration

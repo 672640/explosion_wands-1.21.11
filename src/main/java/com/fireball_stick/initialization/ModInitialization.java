@@ -1,9 +1,11 @@
 package com.fireball_stick.initialization;
 
+import com.fireball_stick.entity.ModEntities;
 import com.fireball_stick.item.ModItems;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.CreativeModeTabs;
 
 import static com.fireball_stick.tnt_stick.TNTStickClickBlock.tick;
@@ -31,6 +33,10 @@ public class ModInitialization implements ModInitializer {
                 .register(entries -> entries.accept(ModItems.FIREBALL_STICK));
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.COMBAT)
                 .register(entries -> entries.accept(ModItems.FIREBALL_STICK));
+
+
+        //CUSTOM TNT
+        ModEntities.init();
 
         //Makes the tick-based placement of TNT work properly
         ServerTickEvents.END_SERVER_TICK.register(server -> tick());

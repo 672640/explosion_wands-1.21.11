@@ -49,7 +49,7 @@ public class FireballStickClickAir extends Item {
         //Max distance we can click on an entity
         int reach = 1000;
         //Clicks on air/liquid
-        int explosionPowerAir = 80;
+        int explosionPowerAir = 10;
         //Clicks on entity
         int explosionPowerEntity = 1;
         //fireball's velocity
@@ -77,13 +77,14 @@ public class FireballStickClickAir extends Item {
             //Fireball's initial spawn position
             Vec3 fireballInAirPosition = player.position().add(0, player.getEyeHeight() - 0.25, 0)
                     .add(playerLookDir.scale(2.5));
-            //Spawns the fireball
+            //Sets the fireball's position
             fireballAir.moveOrInterpolateTo(fireballInAirPosition);
             //Set's the fireball's velocity
             fireballAir.setDeltaMovement(playerLookDir.scale(velocity));
             //Plays sound when cliking on air/liquid
             level.playSound(null, player.getX(), player.getY(), player.getZ(),
                     SoundEvents.FIRECHARGE_USE, SoundSource.PLAYERS, 1.0F, 1.0F);
+            //Spawns the fireball
             return fireballAir;
             //Click on entity
         } else if(entityHitResult != null) {

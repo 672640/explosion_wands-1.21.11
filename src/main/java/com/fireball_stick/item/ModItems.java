@@ -1,6 +1,7 @@
 package com.fireball_stick.item;
 
 import com.fireball_stick.fireball_stick.FireballStickItem;
+import com.fireball_stick.initialization.ModInitialization;
 import com.fireball_stick.tnt_stick_unbound.TNTStickUnboundItem;
 import com.fireball_stick.tnt_stick.TNTStickItem;
 import net.minecraft.core.Registry;
@@ -12,7 +13,6 @@ import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.world.item.Item;
 
 public class ModItems {
-    public static final String MOD_ID = "fireball_stick";
 //TNT STICK
 
     public static final ResourceKey<Item> TNT_STICK_KEY =
@@ -51,7 +51,7 @@ public class ModItems {
     private static ResourceKey<Item> key(String name) {
         return ResourceKey.create(
                 Registries.ITEM,
-                Identifier.fromNamespaceAndPath(MOD_ID, name));
+                Identifier.fromNamespaceAndPath(ModInitialization.MOD_ID, name));
     }
 
     //Registering the item
