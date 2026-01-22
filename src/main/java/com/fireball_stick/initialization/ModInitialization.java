@@ -2,12 +2,11 @@ package com.fireball_stick.initialization;
 
 import com.fireball_stick.entity.ModEntities;
 import com.fireball_stick.item.ModItems;
+import com.fireball_stick.tick.TickQueueManager;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.world.item.CreativeModeTabs;
-
-import static com.fireball_stick.sticks_click_block.TNTStickClickBlock.tick;
 
 public class ModInitialization implements ModInitializer {
     public static final String MOD_ID = "fireball_stick";
@@ -70,6 +69,6 @@ public class ModInitialization implements ModInitializer {
                 .register(entries -> entries.accept(ModItems.TNT_STICK_UNBOUND_BLOCK));
 
         //Makes the tick-based placement of TNT work properly
-        ServerTickEvents.END_SERVER_TICK.register(server -> tick());
+        ServerTickEvents.END_SERVER_TICK.register(server -> TickQueueManager.tick());
     }
 }

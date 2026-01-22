@@ -1,11 +1,15 @@
 package com.fireball_stick.customFunctions.tnt;
 
+import com.fireball_stick.tick.TickQueue;
+import com.fireball_stick.tick.TickQueueManager;
 import net.minecraft.client.particle.FlameParticle;
 import net.minecraft.client.particle.LargeSmokeParticle;
 import net.minecraft.client.particle.ParticleProvider;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
@@ -14,7 +18,13 @@ import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.ExplosionDamageCalculator;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.HitResult;
 
 import java.util.ArrayList;
@@ -78,6 +88,7 @@ public class CustomTnt extends PrimedTnt {
         super.tick();
 
         if (shouldExplode()) {
+            //onPreExplode();
             discardOnFirstUse();
             explode();
             onPostExplode();
@@ -101,7 +112,9 @@ public class CustomTnt extends PrimedTnt {
                     explosionPower,
                     Level.ExplosionInteraction.TNT
             );
-            //serverLevel.sendParticles(ParticleTypes.FLAME, getX(), getY(), getZ(), 700, 3, 3, 3, 0.2);
+            if(entityToSpawn == null) {
+                serverLevel.sendParticles(ParticleTypes.SOUL_FIRE_FLAME, getX(), getY(), getZ(), 700, 3, 3, 3, 0.2);
+            }
             boolean exploded = true;
         }
     }
@@ -112,6 +125,8 @@ public class CustomTnt extends PrimedTnt {
     }
     //What happens after the explosion(s) occurs
     protected void onPostExplode() {
+        TickQueue queue = TickQueueManager.createQueue(entityAmount, 4);
+        List<Entity> spawnedEntities = new ArrayList<>();
         if(entityToSpawn != null && level() instanceof ServerLevel server && entitySpawnAfterExplosion) {
             final double[] angle = {Math.toRadians(0)};
             double angleStep = Math.PI / ((double) entityAmount / 2);
@@ -122,14 +137,24 @@ public class CustomTnt extends PrimedTnt {
             for(int i = 0; i < entityAmount; i++) {
                 Entity entity = entityToSpawn.create(server, EntitySpawnReason.TRIGGERED);
                 if(entity != null) {
+                    int finalI = i;
+                    queue.add(() -> {
                     if(isCircle) {
                         entity.setPos(
-                                getX() + (Math.cos(angle[0]) * amplitude),
-                                getY(),
-                                getZ() + (Math.sin(angle[0]) * amplitude));
+                                getX() + changeX[0] + (Math.cos(angle[0]) * amplitude),
+                                getY() + changeY[0],
+                                getZ() + changeZ[0] + (Math.sin(angle[0]) * amplitude));
+                        //Don't really need the player changing the x and z values for the spawning of entities, since
+                        //it offsets the spawn point for the entities. The y value only changes the height of the
+                        //spawned entities, so it's useful to have
+                        changeX[0] = xChange;
+                        changeY[0] = yChange;
+                        changeZ[0] = zChange;
+
                         angle[0] += angleStep;
                         changePosition[0] += Math.PI / ((double) (entityAmount / 4) / 2);
-                        add(() -> System.out.print("Works in loop 1!"));
+                        //The shape is no longer hardcoded to be a circle, so the player can have
+                        //a lot more options for how they want the entity spawn positions to look
                     } else {
                         entity.setPos(
                                 getX() + changeX[0],
@@ -138,34 +163,48 @@ public class CustomTnt extends PrimedTnt {
                         changeX[0] += xChange;
                         changeY[0] += yChange;
                         changeZ[0] += zChange;
-                        add(() -> System.out.print("Works in loop 2!"));
                     }
                     server.addFreshEntity(entity);
+                    //Adds the spawned entities to a list so we are able to use them later outside the loop
+                    spawnedEntities.add(entity);
+                        //Performance improvement: Spawns a particle effect on each entity that satisfy the modulus criteria instead of on each entity
+                    if((finalI % 6) == 1) {
+                        server.sendParticles(ParticleTypes.SOUL_FIRE_FLAME, entity.getX(), entity.getY(), entity.getZ(), 50, 2, 2, 2, 0.8);
+                        }
+                    });
                 }
             }
+            queue.onComplete(() -> {
+                int spawnedEntitiesNumber = 0;
+                //Iterates through every entity from the list
+                for(Entity e: spawnedEntities) {
+                    if (e.isAlive()) {
+                        //Currently kills all entities instantly
+                        e.kill(server);
+                        if((spawnedEntitiesNumber % 4) == 1) {
+                            server.sendParticles(ParticleTypes.FLAME, e.getX(), e.getY(), e.getZ(), 100, 3, 3, 3, 0.4);
+                        }
+                        spawnedEntitiesNumber++;
+                    }
+                }
+            });
         }
     }
-    //What happens after the explosion(s)
-    /*
-    protected void onPostEntitySpawning() {
 
-        ticksSinceExplosion++;
-        if(afterSpawnEffects
-                && entitySpawnAfterExplosion
-                && entityAmount > 0
-                && ticksSinceExplosion >= afterFirstExplosionDelay
-                && !QUEUE.isEmpty())
-        {
-            QUEUE.remove(0).run();
-            System.out.println("queue not empty!");
-        } else {
-            this.discard();
-            System.out.println("queue empty!");
-        }
-    }
-*/
     protected void discardOnFirstUse() {
-        if(discardTNT) {
+        BlockPos pos = this.blockPosition();
+        BlockState state = level().getBlockState(pos);
+        //Checks if the primedTNT touches water
+        boolean inWater = level().getFluidState(pos).is(FluidTags.WATER);
+
+        if(discardTNT ||
+                (inWater && explosionPower < 24.0F)
+                || explosionPower < 4.0F
+                //Logic for checking if the explosionPower > the explosion resistance of the block it touched.
+                //Currently, does not work, so we can deal with the primedTNT discarding multiple times on
+                //blocks with a high explosion resistance, which should not happen too often... hopefully
+                //|| explosionResistance > explosionPower * 1.3F
+                ) {
             this.discard();
         }
     }

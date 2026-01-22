@@ -2,6 +2,8 @@ package com.fireball_stick.sticks_click_block;
 
 import com.fireball_stick.customFunctions.tnt.CustomTnt;
 import com.fireball_stick.entity.ModEntities;
+import com.fireball_stick.tick.TickQueue;
+import com.fireball_stick.tick.TickQueueManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
@@ -23,32 +25,43 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 public class TNTStickClickBlock {
-	private static int tntAmount = 100;
-	private static final List<Runnable> QUEUE = new ArrayList<>();
+	static int tntAmountPerTick = 4;
+	private static final int tntAmount = 100;
+	static int iterations = 0;
+	private static List<Runnable> QUEUE = new ArrayList<>();
 	private static int tickCounter = 0;
-	private static int taskCount = 0;
-	private static final Queue<Runnable> nextTickQueue = new ArrayDeque<>();
+    private static final Queue<Runnable> nextTickQueue = new ArrayDeque<>();
+	//Queue<Runnable> queue = new ArrayDeque<>();
 	public static void add(Runnable task) {
 		QUEUE.add(task);
 	}
-	//Tick queue system
+/*
+	//Old tick queue system. Works for 1 queue at a time by clearing any other queues that are triggered before this one is finished
 	public static void tick() {
-		if (QUEUE.isEmpty()) {
+		//Ensures that block hits that are happening before the previous queue(s) have finished are not queued for later;
+		//Only allows one complete primed TNT iteration to happen at a time. Might expand to make them run in parallel in the future
+		if (QUEUE.isEmpty() || iterations > tntAmount) {
+			iterations = 0;
+			QUEUE.clear();
 			return;
 		}
+		iterations+= tntAmountPerTick;
 		tickCounter++;
-		if (tickCounter >= 1) {
-			//Resets the tick counter
-			tickCounter = 0;
-			QUEUE.remove(0).run();
+		if (tickCounter >= 1 && iterations <= tntAmount) {
+				//Resets the tick counter
+				tickCounter = 0;
+				//Speeds up the iteration of placing the primed TNTs
+            for(int i = 0; i < tntAmountPerTick; i++) {
+					QUEUE.remove(0).run();
+				}
+				//System.out.println("Iterations: " + iterations);
 		}
 	}
+ */
+
 
 	//Hits a block
 	public static InteractionResult use(Item item, Level level, Player player, InteractionHand hand)  {
@@ -60,11 +73,9 @@ public class TNTStickClickBlock {
 		 */
 
 		if (level instanceof ServerLevel serverLevel && player != null && !level.isClientSide()) {
+			TickQueue queue = TickQueueManager.createQueue(tntAmount, 4);
 			int reach = 1000;
-			float explosionPower = 4.0F;
-			double gravity = 0.04F;
-			boolean explodeOnContact = false;
-			int spawnHeight = 20;
+			final double[] spawnHeight = {30};
 			/*
 			double xDir = clickedPos.getX();
 			double yDir = clickedPos.getY();
@@ -80,7 +91,7 @@ public class TNTStickClickBlock {
 			double angleStep = Math.PI / ((double) tntAmount / 2); //How smooth the curve looks
 			double amplitude = 15; //Width of the curve
 			//Making sure the primed TNTs explode when all the primed TNTs in the current loop has spawned
-			int tntFuseTimer = (tntAmount * 50) / 50 ; //50 ms = 1 tick
+			int tntFuseTimer = (tntAmount * 50) / (50 * tntAmountPerTick) ; //50 ms = 1 tick
 			Vec3 playerEyeStart = player.getEyePosition();
 			Vec3 playerLookAngle = player.getLookAngle();
 			Vec3 playerEyeEnd = playerEyeStart.add(playerLookAngle.scale(reach));
@@ -92,45 +103,50 @@ public class TNTStickClickBlock {
 					player
 			));
 			BlockPos target = blockHitResult.getBlockPos();
-
 			final double[] changePosition = {0}; //Initial position of the starting TNT
 				for (int i = 0; i < tntAmount; i++) {
 						//Fires a TNT at the interval specified in tick()
 					int finalI = i;
 					//Adds one primed TNT based on the tickCounter
-					add(() -> {
+					int finalI1 = i;
+					queue.add(() -> {
 						//Creates primed TNTs every iteration
 						CustomTnt customTnt = ModEntities.CUSTOM_TNT.create(level, EntitySpawnReason.TRIGGERED);
-						//X dir: cos, Z dir: sin, makes a circle
-						customTnt.setPos(target.getX() + (Math.cos(angle[0]) * amplitude),
-								target.getY() + spawnHeight + Math.cos(changePosition[0]) * amplitude / 3,
-								target.getZ() + (Math.sin(angle[0]) * amplitude));
-						customTnt.setFuse(tntFuseTimer);
-						//Adds the primed TNT to the world
-						serverLevel.addFreshEntity(customTnt);
-						//Performance improvement: Spawns a particle effect on each TNT that satisfy the modulus criteria instead of on each TNT
-						if((finalI % 6) == 1) {
-							//Particles only spawn 32 blocks away from the player. Might bypass in future
-							serverLevel.sendParticles(ParticleTypes.COPPER_FIRE_FLAME, customTnt.getX(), customTnt.getY(), customTnt.getZ(), 700, randomDistr, randomDistr, randomDistr, 1);
+						if(customTnt != null) {
+							//X dir: cos, Z dir: sin, makes a circle
+							customTnt.setPos(target.getX() + (Math.cos(angle[0]) * amplitude),
+									target.getY() + spawnHeight[0],
+									target.getZ() + (Math.sin(angle[0]) * amplitude));
+							customTnt.setFuse(tntFuseTimer);
+							//Performance improvement: Spawns a particle effect on each TNT that satisfy the modulus criteria instead of on each TNT
+							if ((finalI % 6) == 1) {
+								//Particles only spawn 32 blocks away from the player. Might bypass in future
+								serverLevel.sendParticles(ParticleTypes.COPPER_FIRE_FLAME, customTnt.getX(), customTnt.getY(), customTnt.getZ(), 700, randomDistr, randomDistr, randomDistr, 1);
+							}
+							customTnt.setExplosionPower(4.0F);
+							customTnt.setExplodeOnContact(false);
+							customTnt.setDefaultGravity(0.15);
+							//Changes the initial angle by the value of angleStep every iteration so the TNTs are not static
+							angle[0] += angleStep;
+							//Height of the cos curve every iteration
+							changePosition[0] += Math.PI / ((double) (tntAmount / 4) / 2);
+							spawnHeight[0] -= 0.25;
+							//Adds the primed TNT to the world
+							serverLevel.addFreshEntity(customTnt);
+							//Kind of a hacky way to play a sound only at the very start of the loop
+							if(finalI1 == 0) {
+								level.playSound(null,
+										blockHitResult.getBlockPos().getX(),
+										//Makes the sound play as close to the y direction the player is at
+										blockHitResult.getBlockPos().getY() + spawnHeight[0],
+										blockHitResult.getBlockPos().getZ(),
+										SoundEvents.TNT_PRIMED,
+										SoundSource.PLAYERS,
+										0.6F, 1.0F);
+							}
 						}
-						customTnt.setExplosionPower(explosionPower);
-						customTnt.setExplodeOnContact(explodeOnContact);
-						customTnt.setDefaultGravity(gravity);
-						//Changes the initial angle by the value of angleStep every iteration so the TNTs are not static
-						angle[0] += angleStep;
-						//Height of the cos curve every iteration
-						changePosition[0] += Math.PI / ((double) (tntAmount / 4) / 2);
 					});
                 }
-			//Plays a sound when a block is clicked
-			level.playSound(null,
-					blockHitResult.getBlockPos().getX(),
-					//Makes the sound play as close to the y direction the player is at
-					blockHitResult.getBlockPos().getY() + spawnHeight,
-					blockHitResult.getBlockPos().getZ(),
-					SoundEvents.TNT_PRIMED,
-					SoundSource.PLAYERS,
-					0.6F, 1.0F);
 			return InteractionResult.SUCCESS;
 		} else {
 			return InteractionResult.CONSUME;

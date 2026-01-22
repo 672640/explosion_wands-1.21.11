@@ -18,9 +18,7 @@ public class FireballStickAirItem extends Item {
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
         if (!level.isClientSide()) {
             Projectile projectile = FireballStickClickAir.asFireballProjectile(this, level, player, hand);
-            if (projectile != null) {
-                level.addFreshEntity(projectile);
-            }
+            level.addFreshEntity(projectile);
         }
         return FireballStickClickAir.use(this, level, player, hand);
     }

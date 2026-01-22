@@ -54,11 +54,14 @@ public class TNTStickUnboundClickAir extends Item {
                 }
                 customTnt.setDeltaMovement(playerLookDir.scale(velocity));
                 level.playSound(null, player.getX(), player.getY(), player.getZ(),
-                        SoundEvents.TNT_PRIMED, SoundSource.PLAYERS, 0.6F, 1.0F);
+                        SoundEvents.TNT_PRIMED, SoundSource.PLAYERS, 0.4F, 1.0F);
                 customTnt.setDiscardOnFirstUse(false);
                 customTnt.setExplodeOnContact(true);
-                customTnt.setExplosionPower(4.0F);
-                customTnt.setFuse(100);
+                //ExplosionPower >= 24.0F means that it can explode blocks in water
+                //Lazy workaround for the primedTNT exploding every tick if it's in water when
+                //setDiscardOnFirstUse(false) and setExplodeOnContact(true).
+                customTnt.setExplosionPower(4F);
+                customTnt.setFuse(150);
                 return customTnt;
             }
         return null;

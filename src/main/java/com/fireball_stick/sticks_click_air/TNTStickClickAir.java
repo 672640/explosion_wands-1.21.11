@@ -64,9 +64,7 @@ public class TNTStickClickAir extends Item {
                 customTnt.setEntitySpawnAfterExplosion(true);
                 customTnt.setCircle(true);
                 customTnt.setAmplitude(10);
-                customTnt.setXChange(2);
-                customTnt.setYChange(2);
-                customTnt.setZChange(2);
+                customTnt.setYChange(10);
                 customTnt.setEntityToSpawn(EntityType.CHICKEN);
                 customTnt.setEntityAmount(60);
                 return customTnt;

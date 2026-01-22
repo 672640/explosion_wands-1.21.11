@@ -42,8 +42,8 @@ public class TNTStickUnboundClickBlock {
             final double[] angle = {Math.toRadians(player.getYRot() + 90)};
             double angleStep = Math.PI / ((double) tntAmount / 2); //How smooth the curve looks
             double amplitude = 15; //Width of the curve
-            //Making sure the primed TNTs explode when all the primed TNTs in the current loop has spawned
-            int tntFuseTimer = (tntAmount * 50) / 50 ; //50 ms = 1 tick
+            //Can be replaced with a hardcoded float instead, since all the primedTNTs spawn at the same time
+            //int tntFuseTimer = (tntAmount * 50) / 50 ; //50 ms = 1 tick
             Vec3 playerEyeStart = player.getEyePosition();
             Vec3 playerLookAngle = player.getLookAngle();
             Vec3 playerEyeEnd = playerEyeStart.add(playerLookAngle.scale(reach));
@@ -64,8 +64,8 @@ public class TNTStickUnboundClickBlock {
                     customTnt.setPos(target.getX() + (Math.cos(angle[0]) * amplitude),
                             target.getY() + spawnHeight,
                             target.getZ() + (Math.sin(angle[0]) * amplitude));
-                    customTnt.setFuse(tntFuseTimer);
-                    customTnt.setExplosionPower(4.0F);
+                    customTnt.setFuse(200);
+                    customTnt.setExplosionPower(15.0F);
                     customTnt.setExplodeOnContact(true);
                     customTnt.setDefaultGravity(0.04);
                     //Adds the primed TNT to the world
@@ -82,7 +82,7 @@ public class TNTStickUnboundClickBlock {
                     target.getZ(),
                     SoundEvents.TNT_PRIMED,
                     SoundSource.PLAYERS,
-                    0.6F,
+                    0.4F,
                     1.0F);
             return InteractionResult.SUCCESS;
         } else {
