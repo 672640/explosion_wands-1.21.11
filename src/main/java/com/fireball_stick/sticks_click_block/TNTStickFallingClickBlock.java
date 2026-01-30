@@ -19,9 +19,8 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import org.apache.commons.compress.compressors.lz77support.LZ77Compressor;
 
-public class TNTStickFallingBlock {
+public class TNTStickFallingClickBlock {
 
     //Hits a block
     public static InteractionResult use(Item item, Level level, Player player, InteractionHand hand)  {
@@ -117,3 +116,4 @@ public class TNTStickFallingBlock {
 }
 //Make there be a random chance to spawn different falling block types, such as sand, gravel and the colored concrete powders
 //Maybe make it have different blocks in the same use
+//Fallback on how many falling blocks can be spawned

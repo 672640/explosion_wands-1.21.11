@@ -1,0 +1,6 @@
+{
+	"model": {
+		"type": "minecraft:model",
+		"model": "fireball_stick:item/tnt_fireball_stick_explosion_block"
+	}
+}

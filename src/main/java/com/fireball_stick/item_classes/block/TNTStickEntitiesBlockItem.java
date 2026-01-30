@@ -1,7 +1,6 @@
 package com.fireball_stick.item_classes.block;
 
-import com.fireball_stick.sticks_click_block.TNTStickEntitiesBlock;
-import com.fireball_stick.sticks_click_block.TNTStickFallingBlock;
+import com.fireball_stick.sticks_click_block.TNTStickEntitiesClickBlock;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -16,6 +15,6 @@ public class TNTStickEntitiesBlockItem extends Item {
     //Click on block
     @Override
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
-        return TNTStickEntitiesBlock.use(this, level, player, hand);
+        return TNTStickEntitiesClickBlock.use(this, level, player, hand);
     }
 }

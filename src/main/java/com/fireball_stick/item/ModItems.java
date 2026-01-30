@@ -134,6 +134,16 @@ public class ModItems {
                             new Item.Properties()
                                     .stacksTo(1)
                                     .setId(TNT_STICK_ENTITIES_BLOCK_KEY)));
+    //TNT FIREBALL STICK EXPLOSION BLOCK
+    public static final ResourceKey<Item> TNT_FIREBALL_STICK_EXPLOSION_BLOCK_KEY =
+            key("tnt_fireball_stick_explosion_block");
+
+    public static final Item TNT_FIREBALL_STICK_EXPLOSION_BLOCK =
+            register(TNT_FIREBALL_STICK_EXPLOSION_BLOCK_KEY,
+                    new TNTFireballStickExplosionBlockItem(
+                            new Item.Properties()
+                                    .stacksTo(1)
+                                    .setId(TNT_FIREBALL_STICK_EXPLOSION_BLOCK_KEY)));
 //HELPER METHODS
     //Creating the item's identity
     private static ResourceKey<Item> key(String name) {

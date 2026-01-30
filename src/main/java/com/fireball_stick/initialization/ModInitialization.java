@@ -87,6 +87,12 @@ public class ModInitialization implements ModInitializer {
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.COMBAT)
                 .register(entries -> entries.accept(ModItems.TNT_STICK_UNBOUND_BLOCK));
 
+        //TNT FIREBALL STICK EXPLOSION BLOCK
+        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES)
+                .register(entries -> entries.accept(ModItems.TNT_FIREBALL_STICK_EXPLOSION_BLOCK));
+        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.COMBAT)
+                .register(entries -> entries.accept(ModItems.TNT_FIREBALL_STICK_EXPLOSION_BLOCK));
+
         //Makes the tick-based placement of TNT work properly
         ServerTickEvents.END_SERVER_TICK.register(server -> TickQueueManager.tick());
     }
