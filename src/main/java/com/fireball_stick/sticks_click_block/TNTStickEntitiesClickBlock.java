@@ -51,12 +51,6 @@ public class TNTStickEntitiesClickBlock {
             double r = ExplosionEntities.r;
             int spawnHeight = ExplosionEntities.spawnHeight;
             int reach = ExplosionEntities.reach;
-            //int spawnedEntitiesComparisonAmount = ExplosionEntities.spawnedEntitiesComparisonAmount;
-            //int spawnedEntitiesComparison = ExplosionEntities.spawnedEntitiesComparison;
-            //Makes the start spawn angle of the TNT be equal to the direction the player is facing (default (0): east)
-            final double[] angle = {Math.toRadians(player.getYRot() + 90)};
-            //Can be replaced with a hardcoded float instead, since all the primedTNTs spawn at the same time
-            //int tntFuseTimer = (tntAmount * 50) / 50 ; //50 ms = 1 tick
             Vec3 playerEyeStart = player.getEyePosition();
             Vec3 playerLookAngle = player.getLookAngle();
             Vec3 playerEyeEnd = playerEyeStart.add(playerLookAngle.scale(reach));
@@ -74,26 +68,42 @@ public class TNTStickEntitiesClickBlock {
             if(spawnedEntities <= maxEntities) {
                 for (double theta = ExplosionEntities.theta; theta <= lessThanTheta; theta += incrementTheta) {
                     for (double phi = ExplosionEntities.phi; phi <= lessThanPhi; phi += incrementPhi) {
-                        if(randomEntity <= spawnedEntities / 4 && spawnedEntities >= 0) {
+                        if(randomEntity <= spawnedEntities / 8 && spawnedEntities >= 0) {
                             entityToSpawn = EntityType.CHICKEN;
                             entityType = entityToSpawn.toString();
                         }
-                        if(randomEntity <= spawnedEntities / 2 && randomEntity > spawnedEntities / 4) {
+                        if(randomEntity <= (spawnedEntities / 4) && randomEntity > (spawnedEntities / 8)) {
                             entityToSpawn = EntityType.BREEZE;
                             entityType = entityToSpawn.toString();
                         }
-                        if(randomEntity <= (spawnedEntities / 4) * 3 && randomEntity > spawnedEntities / 2) {
+                        if(randomEntity <= (spawnedEntities / 8) * 2 + (spawnedEntities / 8) && randomEntity > (spawnedEntities / 4)) {
                             entityToSpawn = EntityType.COW;
                             entityType = entityToSpawn.toString();
                         }
-                        if(randomEntity <= spawnedEntities && randomEntity > (spawnedEntities / 4) * 3) {
+                        if(randomEntity <= spawnedEntities / 2 && randomEntity > (spawnedEntities / 8) * 2 + (spawnedEntities / 8)) {
                             entityToSpawn = EntityType.BAT;
+                            entityType = entityToSpawn.toString();
+                        }
+                        if(randomEntity <= (spawnedEntities / 2) + (spawnedEntities / 8) && randomEntity > (spawnedEntities / 2)) {
+                            entityToSpawn = EntityType.ARMADILLO;
+                            entityType = entityToSpawn.toString();
+                        }
+                        if(randomEntity <= (spawnedEntities / 2) + (spawnedEntities / 4) && randomEntity > (spawnedEntities / 2) + (spawnedEntities / 8)) {
+                            entityToSpawn = EntityType.GOAT;
+                            entityType = entityToSpawn.toString();
+                        }
+                        if(randomEntity <= spawnedEntities - (spawnedEntities / 8) && randomEntity > (spawnedEntities / 2) + (spawnedEntities / 4)) {
+                            entityToSpawn = EntityType.PIG;
+                            entityType = entityToSpawn.toString();
+                        }
+                        if(randomEntity <= spawnedEntities && randomEntity > spawnedEntities - (spawnedEntities / 8)) {
+                            entityToSpawn = EntityType.SNOW_GOLEM;
                             entityType = entityToSpawn.toString();
                         }
                         Entity entity = entityToSpawn.create(level, EntitySpawnReason.TRIGGERED);
                         CustomTnt customTnt = ModEntities.CUSTOM_TNT.create(level, EntitySpawnReason.TRIGGERED);
                         //This does not make a perfect circle, but it should not be noticeable
-                        if (increment <= randomExplosion) {
+                        if (increment <= randomExplosion && customTnt != null) {
                             customTnt.setPos(target.getX(),
                                     target.getY() + spawnHeight,
                                     target.getZ()
@@ -102,25 +112,13 @@ public class TNTStickEntitiesClickBlock {
                             customTnt.setFuse(fuse);
                             customTnt.setExplosionPower(randomIncrement);
                         }
-                        //Creates primed TNTs every iteration
-                        //CustomTnt customTnt = ModEntities.CUSTOM_TNT.create(level, EntitySpawnReason.TRIGGERED);
-                        //X dir: cos, Z dir: sin, makes a circle
-                        entity.setPos(target.getX() + x,
-                                target.getY() + y + spawnHeight,
-                                target.getZ() + z
-                        );
-                    /*
-                    customTnt.setFuse(40);
-                    customTnt.setExplosionPower(0F);
-                    customTnt.setExplodeOnContact(false);
-                    customTnt.setDefaultGravity(-0.04);
-
-                     */
-                        //Adds the primed TNT to the world
+                        if(entity != null) {
+                            entity.setPos(target.getX() + x,
+                                    target.getY() + y + spawnHeight,
+                                    target.getZ() + z
+                            );
+                        }
                         serverLevel.addFreshEntity(entity);
-                        //Changes the initial angle by the value of angleStep every iteration so the TNTs are not static
-                        //Height of the cos curve every iteration
-                        //changePosition[0] += Math.PI / ((double) (tntAmount / 4) / 2);
                         x = r * Math.sin(theta) * Math.cos(phi);
                         y = r * Math.cos(theta);
                         z = r * Math.sin(theta) * Math.sin(phi);
@@ -140,21 +138,21 @@ public class TNTStickEntitiesClickBlock {
                     ",   random entity number:    " + randomEntity
                     + ",   entity type: " + entityType
             );
+
             //Plays a sound when a block is clicked
+            /*
             level.playSound(null,
-                    target.getX(),
-                    target.getY() + spawnHeight,
-                    target.getZ(),
+                    player.getX(),
+                    player.getY(),
+                    player.getZ(),
                     SoundEvents.TNT_PRIMED,
                     SoundSource.PLAYERS,
                     0.4F,
                     1.0F);
+             */
             return InteractionResult.SUCCESS;
         } else {
             return InteractionResult.CONSUME;
         }
     }
 }
-//Maybe make there be a random chance to get certain random effects, such as spawning chicken instead of PrimedTNT
-//Fallback on how many entities can be spawned
-//Maybe double the if-statements for added extendability
