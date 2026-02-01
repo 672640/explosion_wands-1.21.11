@@ -6,11 +6,13 @@ public class ExplosionEntities {
     private ExplosionEntities() {}
     public static int maxEntities = 1028;
     public static int fuse = 0;
+    //This makes the most difference to how far the entities fly
     public static float minExplosion = 2F;
     public static float maxExplosion = 4F;
     //Amount of primedTNTs that spawn in the center
     public static int minIncrement = 2;
-    public static int maxIncrement = 5;
+    public static int maxIncrement = 3;
+    public static double randomPos = 0.1;
     public static double lessThanTheta = Math.PI;
     public static double lessThanPhi = 2 * Math.PI;
 
@@ -25,7 +27,6 @@ public class ExplosionEntities {
     public static double x;
     public static double y;
     public static double z = y = x = theta = phi = 0;
-
 
     public static double r = 2;
     public static int spawnHeight = 20;

@@ -36,9 +36,11 @@ public class TNTStickEntitiesClickBlock {
             int minRandomEntities = ExplosionEntities.minRandomEntity;
             int maxRandomEntities = ExplosionEntities.maxRandomEntity;
             RandomSource random = RandomSource.create();
+            double maxRandomPos = ExplosionEntities.randomPos;
             float randomExplosion = (minExplosion + random.nextFloat() * (maxExplosion - minExplosion));
             int randomIncrement = minIncrement + random.nextInt(maxIncrement - minIncrement);
             int randomEntity = minRandomEntities + random.nextInt(maxRandomEntities - minRandomEntities);
+            double randomPos = (maxRandomPos + random.nextDouble() * (maxRandomPos - 0));
 
             int increment = ExplosionEntities.increment;
             double lessThanTheta = ExplosionEntities.lessThanTheta;
@@ -108,10 +110,10 @@ public class TNTStickEntitiesClickBlock {
                                     target.getY() + spawnHeight,
                                     target.getZ()
                             );
+                        }
                             serverLevel.addFreshEntity(customTnt);
                             customTnt.setFuse(fuse);
                             customTnt.setExplosionPower(randomIncrement);
-                        }
                         if(entity != null) {
                             entity.setPos(target.getX() + x,
                                     target.getY() + y + spawnHeight,
@@ -119,9 +121,9 @@ public class TNTStickEntitiesClickBlock {
                             );
                         }
                         serverLevel.addFreshEntity(entity);
-                        x = r * Math.sin(theta) * Math.cos(phi);
-                        y = r * Math.cos(theta);
-                        z = r * Math.sin(theta) * Math.sin(phi);
+                        x = r * Math.sin(theta) * Math.cos(phi) + randomPos;
+                        y = r * Math.cos(theta) + randomPos;
+                        z = r * Math.sin(theta) * Math.sin(phi) + randomPos;
                         increment++;
                     }
                 }

@@ -1,5 +1,6 @@
 package com.fireball_stick.entity;
 
+import com.fireball_stick.customFunctions.falling_block.CustomFallingBlockEntity;
 import com.fireball_stick.customFunctions.fireball.CustomFireball;
 import com.fireball_stick.customFunctions.tnt.CustomTnt;
 import com.fireball_stick.initialization.ModInitialization;
@@ -34,6 +35,17 @@ public class ModEntities {
                             .of(CustomFireball::new, MobCategory.MISC)
                             .sized(0.98F, 0.98F)
                             .build(CUSTOM_FIREBALL_KEY));
+
+    //CUSTOM FALLING BLOCK ENTITY
+    public static final ResourceKey<EntityType<?>> CUSTOM_FALLING_BLOCK_ENTITY_KEY =
+            key("custom_falling_block_entity");
+
+    public static final EntityType<CustomFallingBlockEntity> CUSTOM_FALLING_BLOCK_ENTITY =
+            register(CUSTOM_FALLING_BLOCK_ENTITY_KEY,
+                    EntityType
+                            .Builder
+                            .of(CustomFallingBlockEntity::new, MobCategory.MISC)
+                            .build(CUSTOM_FALLING_BLOCK_ENTITY_KEY));
 
     //HELPER METHODS
     private static ResourceKey<EntityType<?>> key(String name) {

@@ -14,6 +14,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.hurtingprojectile.LargeFireball;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -36,20 +37,26 @@ public class TNTFireballStickExplosionClickBlock {
             int minRandomEntities = ExplosionEntities.minRandomEntity;
             int maxRandomEntities = ExplosionEntities.maxRandomEntity;
             RandomSource random = RandomSource.create();
+            double maxRandomPos = ExplosionEntities.randomPos;
+            double randomPos = (maxRandomPos + random.nextDouble() * (maxRandomPos - 0));
             float randomExplosion = (minExplosion + random.nextFloat() * (maxExplosion - minExplosion));
             int randomIncrement = minIncrement + random.nextInt(maxIncrement - minIncrement);
             int randomEntity = minRandomEntities + random.nextInt(maxRandomEntities - minRandomEntities);
-
+            int fireballExplosionPower = 5;
             int increment = ExplosionEntities.increment;
             double lessThanTheta = ExplosionEntities.lessThanTheta;
             double lessThanPhi = ExplosionEntities.lessThanPhi;
             double incrementTheta = ExplosionEntities.incrementTheta;
+            incrementTheta = 0.5;
             double incrementPhi = ExplosionEntities.incrementPhi;
+            incrementPhi = 0.5;
             double x = ExplosionEntities.x;
             double y = ExplosionEntities.y;
             double z = ExplosionEntities.z;
             double r = ExplosionEntities.r;
+            r = 3;
             int spawnHeight = ExplosionEntities.spawnHeight;
+            spawnHeight = 25;
             int reach = ExplosionEntities.reach;
             //int spawnedEntitiesComparisonAmount = ExplosionEntities.spawnedEntitiesComparisonAmount;
             //int spawnedEntitiesComparison = ExplosionEntities.spawnedEntitiesComparison;
@@ -70,42 +77,29 @@ public class TNTFireballStickExplosionClickBlock {
             EntityType<?> entityToSpawn = EntityType.CHICKEN;
             String entityType = "";
             BlockPos target = blockHitResult.getBlockPos();
+            //entityToSpawn = EntityType.FIREBALL;
             //Failsafe in-case we spawn more entities than is intended
             if(spawnedEntities <= maxEntities) {
                 for (double theta = ExplosionEntities.theta; theta <= lessThanTheta; theta += incrementTheta) {
                     for (double phi = ExplosionEntities.phi; phi <= lessThanPhi; phi += incrementPhi) {
-                        if(randomEntity <= spawnedEntities / 4 && spawnedEntities >= 0) {
-                            entityToSpawn = EntityType.TNT;
-                            entityType = entityToSpawn.toString();
-                        }
-                        if(randomEntity <= spawnedEntities / 2 && randomEntity > spawnedEntities / 4) {
-                            entityToSpawn = EntityType.FIREBALL;
-                            entityType = entityToSpawn.toString();
-                        }
-                        if(randomEntity <= (spawnedEntities / 4) * 3 && randomEntity > spawnedEntities / 2) {
-                            entityToSpawn = EntityType.TNT;
-                            entityType = entityToSpawn.toString();
-                        }
-                        if(randomEntity <= spawnedEntities && randomEntity > (spawnedEntities / 4) * 3) {
-                            entityToSpawn = EntityType.FIREBALL;
-                            entityType = entityToSpawn.toString();
-                        }
                         Entity entity = entityToSpawn.create(level, EntitySpawnReason.TRIGGERED);
+                        LargeFireball fireball = new LargeFireball(level, player, playerLookAngle, fireballExplosionPower);
                         CustomTnt customTnt = ModEntities.CUSTOM_TNT.create(level, EntitySpawnReason.TRIGGERED);
                         //This does not make a perfect circle, but it should not be noticeable
-                        if (increment <= randomExplosion) {
+                        if (increment <= 0 && customTnt != null) {
                             customTnt.setPos(target.getX(),
-                                    target.getY() + spawnHeight,
+                                    target.getY() + spawnHeight + 6,
                                     target.getZ()
                             );
                             serverLevel.addFreshEntity(customTnt);
                             customTnt.setFuse(fuse);
-                            customTnt.setExplosionPower(randomIncrement);
+                            customTnt.setExplosionPower(0F);
+                            System.out.println("TNTs spawned: " + (increment + 1));
                         }
                         //Creates primed TNTs every iteration
                         //CustomTnt customTnt = ModEntities.CUSTOM_TNT.create(level, EntitySpawnReason.TRIGGERED);
                         //X dir: cos, Z dir: sin, makes a circle
-                        entity.setPos(target.getX() + x,
+                        fireball.setPos(target.getX() + x,
                                 target.getY() + y + spawnHeight,
                                 target.getZ() + z
                         );
@@ -117,13 +111,13 @@ public class TNTFireballStickExplosionClickBlock {
 
                      */
                         //Adds the primed TNT to the world
-                        serverLevel.addFreshEntity(entity);
+                        serverLevel.addFreshEntity(fireball);
                         //Changes the initial angle by the value of angleStep every iteration so the TNTs are not static
                         //Height of the cos curve every iteration
                         //changePosition[0] += Math.PI / ((double) (tntAmount / 4) / 2);
-                        x = r * Math.sin(theta) * Math.cos(phi);
-                        y = r * Math.cos(theta);
-                        z = r * Math.sin(theta) * Math.sin(phi);
+                        x = r * Math.sin(theta) * Math.cos(phi) + randomPos;
+                        y = r * Math.cos(theta) + randomPos;
+                        z = r * Math.sin(theta) * Math.sin(phi) + randomPos;
                         increment++;
                     }
                 }
@@ -141,6 +135,7 @@ public class TNTFireballStickExplosionClickBlock {
                     + ",   entity type: " + entityType
             );
             //Plays a sound when a block is clicked
+            /*
             level.playSound(null,
                     target.getX(),
                     target.getY() + spawnHeight,
@@ -149,6 +144,7 @@ public class TNTFireballStickExplosionClickBlock {
                     SoundSource.PLAYERS,
                     0.4F,
                     1.0F);
+             */
             return InteractionResult.SUCCESS;
         } else {
             return InteractionResult.CONSUME;
@@ -157,4 +153,4 @@ public class TNTFireballStickExplosionClickBlock {
 }
 //Maybe split them into TNT and fireball
 //Customize the fireballs with the same technique as for the other fireball classes
-//Replace normal primedTnt with customTnt
+//Maybe make it a half-circle instead

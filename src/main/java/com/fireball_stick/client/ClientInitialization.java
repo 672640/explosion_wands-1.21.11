@@ -22,5 +22,9 @@ public class ClientInitialization implements ClientModInitializer {
                 (Context ctx) -> new FlyingItemEntityRenderer<>(ctx, fireball_stick_shotgun_air.png, 1.0f);
         );
  */
+
+        EntityRenderers.register(
+                ModEntities.CUSTOM_FALLING_BLOCK_ENTITY,
+                FallingBlockRenderer::new);
     }
 }
