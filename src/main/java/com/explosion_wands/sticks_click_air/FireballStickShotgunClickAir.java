@@ -39,7 +39,7 @@ public class FireballStickShotgunClickAir extends Item {
         double changePos = 0;
         double fireballAmount = 50;
         //Clicks on air/liquid
-        int explosionPowerAir = 10;
+        int explosionPowerAir = 9;
         //fireball's velocity
         double velocity = 3;
         double dirX = player.getX();

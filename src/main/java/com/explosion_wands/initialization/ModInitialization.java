@@ -9,7 +9,7 @@ import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.world.item.CreativeModeTabs;
 
 public class ModInitialization implements ModInitializer {
-    public static final String MOD_ID = "fireball_stick";
+    public static final String MOD_ID = "explosion_wands";
 
     public void onInitialize() {
         ModItems.init();

@@ -56,7 +56,7 @@ public class TNTStickUnboundClickAir extends Item {
                         SoundEvents.TNT_PRIMED, SoundSource.PLAYERS, 0.4F, 1.0F);
                 customTnt.setDiscardOnFirstUse(false);
                 customTnt.setExplodeOnContact(true);
-                customTnt.setExplosionPower(8F);
+                customTnt.setExplosionPower(10F);
                 customTnt.setFuse(500);
                 customTnt.addTag("customTnt");
                 if(customTnt.touchingUnloadedChunk()) {

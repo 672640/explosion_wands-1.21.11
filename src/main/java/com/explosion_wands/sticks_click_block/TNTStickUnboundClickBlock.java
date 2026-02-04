@@ -35,7 +35,7 @@ public class TNTStickUnboundClickBlock {
             double yDir = clickedPos.getY();
             double zDir = clickedPos.getZ();
              */
-            int tntAmount = 100;
+            int tntAmount = 80;
             //Makes the start spawn angle of the TNT be equal to the direction the player is facing (default (0): east)
             final double[] angle = {Math.toRadians(player.getYRot() + 90)};
             double angleStep = Math.PI / ((double) tntAmount / 2); //How smooth the curve looks
@@ -63,7 +63,7 @@ public class TNTStickUnboundClickBlock {
                             target.getY() + spawnHeight,
                             target.getZ() + (Math.sin(angle[0]) * amplitude));
                     customTnt.setFuse(200);
-                    customTnt.setExplosionPower(15.0F);
+                    customTnt.setExplosionPower(10.0F);
                     customTnt.setExplodeOnContact(true);
                     customTnt.setDefaultGravity(0.04);
                     //Adds the primed TNT to the world

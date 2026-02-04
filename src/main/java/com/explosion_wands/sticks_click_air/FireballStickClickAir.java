@@ -44,7 +44,7 @@ public class FireballStickClickAir extends Item {
         //Max distance we can click on an entity
         int reach = 360;
         //Clicks on air/liquid
-        int explosionPowerAir = 60;
+        int explosionPowerAir = 40;
         //Clicks on entity
         int explosionPowerEntity = 1;
         //fireball's velocity

@@ -55,7 +55,7 @@ public class FireballStickClickBlock {
         int spawnHeight = 50;
         double amplitude = 15;
         int fireballAmount = 40;
-        int explosionPower = 15;
+        int explosionPower = 10;
         //Direction the fireballs will head towards, and the speed of the fireballs
         double xDir = 0;
         double yDir = -2;

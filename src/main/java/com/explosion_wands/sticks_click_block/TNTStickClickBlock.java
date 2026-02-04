@@ -121,7 +121,7 @@ public class TNTStickClickBlock {
 								//Particles only spawn 32 blocks away from the player. Might bypass in future
 								serverLevel.sendParticles(ParticleTypes.COPPER_FIRE_FLAME, customTnt.getX(), customTnt.getY(), customTnt.getZ(), 700, randomDistr, randomDistr, randomDistr, 1);
 							}
-							customTnt.setExplosionPower(4.0F);
+							customTnt.setExplosionPower(6.0F);
 							customTnt.setExplodeOnContact(false);
 							customTnt.setDefaultGravity(0.15);
 							//Changes the initial angle by the value of angleStep every iteration so the TNTs are not static
