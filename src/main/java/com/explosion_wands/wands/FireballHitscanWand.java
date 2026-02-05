@@ -1,4 +1,4 @@
-package com.explosion_wands.sticks_click_air;
+package com.explosion_wands.wands;
 
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.server.level.ServerLevel;
@@ -21,14 +21,13 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
-public class FireballStickHitscanClickAir extends Item {
-    public FireballStickHitscanClickAir(Properties properties) {
+public class FireballHitscanWand extends Item {
+    public FireballHitscanWand(Properties properties) {
         super(properties);
     }
 
     //Initializes the item
     public static InteractionResult use(Item item, Level level, Player player, InteractionHand hand) {
-        //ItemStack itemStack = player.getItemInHand(hand);
         BlockHitResult hitResult = getPlayerPOVHitResult(level, player, ClipContext.Fluid.NONE);
         if (hitResult.getType() != HitResult.Type.BLOCK && !level.isClientSide()) {
             return InteractionResult.SUCCESS;
@@ -44,10 +43,8 @@ public class FireballStickHitscanClickAir extends Item {
         double randomDistr1 = min + random.nextDouble() * (max - min);
         double randomDistr2 = min + random.nextDouble() * (max - min);
         double randomDistr3 = min + random.nextDouble() * (max - min);
-        //BlockHitResult blockHitResult = getPlayerPOVHitResult(level, player, ClipContext.Fluid.NONE);
         //Max distance we can click on an entity, set to the maximum render distance where entities can be visible. Possibly a performance boost too
         int reach = 128;
-        //Clicks on air/liquid
         int explosionPowerAir = 10;
         //Makes it 0F so it can't damage blocks or other entities than the one we clicked on
         float explosionPowerEntity = 0F;
@@ -56,17 +53,11 @@ public class FireballStickHitscanClickAir extends Item {
         double dirX = player.getX();
         double dirY = player.getY();
         double dirZ = player.getZ();
-        //Vec3 dir = new Vec3(dirX, dirY, dirZ);
         Vec3 playerLookDir = player.getLookAngle();
         Vec3 playerStartDir = player.getEyePosition();
         Vec3 playerEndDir = playerStartDir.add(playerLookDir.scale(reach));
         playerLookDir.add(dirX, dirY, dirZ).normalize();
-
-        //playerLookDir.add(0, 1000, 0).normalize();
-        //SmallFireball fireball = new SmallFireball(level, dirX, dirY, dirZ, dir.normalize());;
         LargeFireball fireballAir = new LargeFireball(level, player, playerLookDir, explosionPowerAir);
-        //Store the fireball's position
-        Vec3 fireballPos = fireballAir.position();
         //Target entity
         EntityHitResult entityHitResult = ProjectileUtil.getEntityHitResult(
                 level, fireballAir, playerStartDir, playerEndDir, player.getBoundingBox()
@@ -87,8 +78,6 @@ public class FireballStickHitscanClickAir extends Item {
             if(entityHitResult != null) {
             double entityDistance = entityHitResult.getLocation().distanceTo(playerStartDir);
                 Entity target = entityHitResult.getEntity();
-                //net.minecraft.world.phys.AABB inflatedHitbox = target.getBoundingBox().inflate(100);
-                //Optional<Vec3> hit = inflatedHitbox.clip(playerStartDir, playerEndDir);
                     //Ensures that we cannot hit entities through blocks
                     //Also hopeful performance improvements by ensuring that the block distance is less than or equal to the player's reach
                     //...also hopefully no intended consequences of this...
@@ -114,9 +103,9 @@ public class FireballStickHitscanClickAir extends Item {
                         //Fireball is fake now, discards it when spawned so it doesn't appear after exploding
                         //This also causes the player to not get the return to sender achievement as a side effect
                         fireballAir.discard();
-                        //Sound effect when clicking on entity
-                            level.playSound(null, dirX, dirY, dirZ, SoundEvents.PLAYER_LEVELUP, SoundSource.NEUTRAL, 0.2F, 1.0F);
+                        level.playSound(null, dirX, dirY, dirZ, SoundEvents.PLAYER_LEVELUP, SoundSource.NEUTRAL, 0.2F, 1.0F);
                         fireballAir.addTag("fireball");
+
                         if(fireballAir.touchingUnloadedChunk()) {
                             fireballAir.discard();
                         }

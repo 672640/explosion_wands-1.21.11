@@ -1,4 +1,4 @@
-package com.explosion_wands.sticks_click_block;
+package com.explosion_wands.wands;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
-public class FireballStickClickBlock {
+public class FireballBarrageWand {
     private static final List<Runnable> QUEUE = new ArrayList<>();
     private static int tickCounter = 0;
     private static int taskCount = 0;
@@ -45,12 +45,6 @@ public class FireballStickClickBlock {
 
     //Hits a block
     public static InteractionResult use(Item item, Level level, Player player, InteractionHand hand) {
-        /*
-        BlockPlaceContext placeContext = new BlockPlaceContext(context);
-        BlockPos clickedPos = placeContext.getClickedPos();
-        Level level = context.getLevel();
-        Player player = context.getPlayer();
-         */
         int reach = 360;
         int spawnHeight = 50;
         double amplitude = 15;
@@ -66,20 +60,10 @@ public class FireballStickClickBlock {
             double angle = Math.toRadians(player.getYRot() + 90);
             //Makes the fireballs equally spread out
             double angleStep = Math.PI / ((double) fireballAmount / 2);
-            Direction playerLookDir = player.getDirection();
             Vec3 playerEyeStart = player.getEyePosition();
             //Also how far away the fireballs spawn from the player
             Vec3 playerLookAngle = player.getLookAngle();
             Vec3 playerEyeEnd = playerEyeStart.add(playerLookAngle.scale(reach));
-
-
-            //Position the fireballs will face
-            /*
-            double xPos = playerEyeStart.x;
-            //To make the y-position consistent
-            double yPos = clickedPos.getY();
-            double zPos = playerEyeStart.z;
-             */
             BlockHitResult blockHitResult = level.clip(new ClipContext(
                     playerEyeStart,
                     playerEyeEnd,
@@ -88,14 +72,12 @@ public class FireballStickClickBlock {
                     player
             ));
             BlockPos target = blockHitResult.getBlockPos();
-
             for (int i = 0; i < fireballAmount; i++) {
                 LargeFireball largeFireball = new LargeFireball(
                         level,
                         player,
                         dir,
                         explosionPower);
-
                 largeFireball.setPos(
                         target.getX() + (Math.cos(angle) * amplitude),
                         target.getY() + spawnHeight,
@@ -108,7 +90,6 @@ public class FireballStickClickBlock {
                     largeFireball.discard();
                 }
                 angle += angleStep;
-                yDir = yDir;
             }
             serverLevel.playSound(null, blockHitResult.getBlockPos().getX(),
                     //Makes the sound play as close to the y direction the player is at

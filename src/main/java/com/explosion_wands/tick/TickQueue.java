@@ -27,7 +27,6 @@ public class TickQueue {
 
     public boolean tick() {
         if(queue.isEmpty()
-                //|| iterations > amount
             ) {
             if(onComplete != null) {
                 onComplete.run();
@@ -41,8 +40,6 @@ public class TickQueue {
         for(int i = 0; i < runsThisTick; i++) {
             queue.poll().run();
         }
-        //Obsolete. Can be replaced with the below one instead
-        //return iterations >= amount || queue.isEmpty();
         return false;
     }
 }

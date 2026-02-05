@@ -1,27 +1,28 @@
-package com.explosion_wands.item_classes.air;
+package com.explosion_wands.item_classes;
 
-import com.explosion_wands.sticks_click_air.TNTStickMidClickAir;
+import com.explosion_wands.wands.TNTTornadoWand;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
+import org.jspecify.annotations.NonNull;
 
-public class TNTStickMidAirItem extends Item {
-    public TNTStickMidAirItem(Properties properties) {
+public class TNTTornadoWandItem extends Item {
+    public TNTTornadoWandItem(Properties properties) {
         super(properties);
     }
 
     //Click on air/liquid/entity
     @Override
-    public InteractionResult use(Level level, Player player, InteractionHand hand) {
+    public @NonNull InteractionResult use(Level level, @NonNull Player player, @NonNull InteractionHand hand) {
         if (!level.isClientSide()) {
-            PrimedTnt customTnt = TNTStickMidClickAir.asPrimedTnt(this, level, player, hand);
+            PrimedTnt customTnt = TNTTornadoWand.asPrimedTnt(this, level, player, hand);
             if (customTnt != null) {
                 level.addFreshEntity(customTnt);
             }
         }
-        return TNTStickMidClickAir.use(this, level, player, hand);
+        return TNTTornadoWand.use(this, level, player, hand);
     }
 }

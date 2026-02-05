@@ -1,4 +1,4 @@
-package com.explosion_wands.sticks_click_block;
+package com.explosion_wands.wands;
 
 import com.explosion_wands.customFunctions.tnt.CustomTnt;
 import com.explosion_wands.entity.ModEntities;
@@ -8,7 +8,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
@@ -19,7 +18,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
-public class TNTFireballStickExplosionClickBlock {
+public class FireballScatterWand {
 
     //Hits a block
     public static InteractionResult use(Item item, Level level, Player player, InteractionHand hand)  {
@@ -28,40 +27,25 @@ public class TNTFireballStickExplosionClickBlock {
             int maxEntities = ExplosionEntities.maxEntities;
             int fuse = ExplosionEntities.fuse;
             int spawnedEntities = ExplosionEntities.spawnedEntities;
-            float minExplosion = ExplosionEntities.minExplosion;
-            float maxExplosion = ExplosionEntities.maxExplosion;
-            int minIncrement = ExplosionEntities.minIncrement;
-            int maxIncrement = ExplosionEntities.maxIncrement;
-            int minRandomEntities = ExplosionEntities.minRandomEntity;
-            int maxRandomEntities = ExplosionEntities.maxRandomEntity;
             RandomSource random = RandomSource.create();
             double maxRandomPos = ExplosionEntities.randomPos;
             double randomPos = (maxRandomPos + random.nextDouble() * (maxRandomPos - 0));
-            float randomExplosion = (minExplosion + random.nextFloat() * (maxExplosion - minExplosion));
-            int randomIncrement = minIncrement + random.nextInt(maxIncrement - minIncrement);
-            int randomEntity = minRandomEntities + random.nextInt(maxRandomEntities - minRandomEntities);
             int fireballExplosionPower = 8;
             int increment = ExplosionEntities.increment;
             double lessThanTheta = ExplosionEntities.lessThanTheta;
             double lessThanPhi = ExplosionEntities.lessThanPhi;
-            double incrementTheta = ExplosionEntities.incrementTheta;
+            double incrementTheta;
             incrementTheta = 0.5;
-            double incrementPhi = ExplosionEntities.incrementPhi;
+            double incrementPhi;
             incrementPhi = 0.5;
             double x = ExplosionEntities.x;
             double y = ExplosionEntities.y;
             double z = ExplosionEntities.z;
-            double r = ExplosionEntities.r;
+            double r;
             r = 8;
-            int spawnHeight = ExplosionEntities.spawnHeight;
+            int spawnHeight;
             spawnHeight = 20;
             int reach = ExplosionEntities.reach;
-            //int spawnedEntitiesComparisonAmount = ExplosionEntities.spawnedEntitiesComparisonAmount;
-            //int spawnedEntitiesComparison = ExplosionEntities.spawnedEntitiesComparison;
-            //Makes the start spawn angle of the TNT be equal to the direction the player is facing (default (0): east)
-            final double[] angle = {Math.toRadians(player.getYRot() + 90)};
-            //Can be replaced with a hardcoded float instead, since all the primedTNTs spawn at the same time
-            //int tntFuseTimer = (tntAmount * 50) / 50 ; //50 ms = 1 tick
             Vec3 playerEyeStart = player.getEyePosition();
             Vec3 playerLookAngle = player.getLookAngle();
             Vec3 playerEyeEnd = playerEyeStart.add(playerLookAngle.scale(reach));
@@ -72,10 +56,7 @@ public class TNTFireballStickExplosionClickBlock {
                     ClipContext.Fluid.NONE,
                     player
             ));
-            EntityType<?> entityToSpawn = EntityType.CHICKEN;
-            String entityType = "";
             BlockPos target = blockHitResult.getBlockPos();
-            //entityToSpawn = EntityType.FIREBALL;
             //Failsafe in-case we spawn more entities than is intended
             if(spawnedEntities <= maxEntities) {
                 for (double theta = ExplosionEntities.theta; theta <= lessThanTheta / 2; theta += incrementTheta) {
@@ -93,8 +74,7 @@ public class TNTFireballStickExplosionClickBlock {
                             customTnt.setExplosionPower(0F);
                             //System.out.println("TNTs spawned: " + (increment + 1));
                         }
-                        //Creates primed TNTs every iteration
-                        //CustomTnt customTnt = ModEntities.CUSTOM_TNT.create(level, EntitySpawnReason.TRIGGERED);
+                        //Creates fireball every iteration
                         //X dir: cos, Z dir: sin, makes a circle
                         if(x != 0 && y != 0 && z != 0) {
                             fireball.setPos(target.getX() + x,

@@ -1,4 +1,4 @@
-package com.explosion_wands.sticks_click_block;
+package com.explosion_wands.wands;
 
 import com.explosion_wands.customFunctions.tnt.CustomTnt;
 import com.explosion_wands.entity.ModEntities;
@@ -25,7 +25,7 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.*;
 
-public class TNTStickClickBlock {
+public class TNTSlowBarrageWand {
 	static int tntAmountPerTick = 4;
 	private static final int tntAmount = 100;
 	static int iterations = 0;
@@ -63,22 +63,10 @@ public class TNTStickClickBlock {
 
 	//Hits a block
 	public static InteractionResult use(Item item, Level level, Player player, InteractionHand hand)  {
-		/*
-		BlockPlaceContext placeContext = new BlockPlaceContext(context);
-		BlockPos clickedPos = placeContext.getClickedPos();
-		Level level = context.getLevel();
-		Player player = context.getPlayer();
-		 */
-
 		if (level instanceof ServerLevel serverLevel && player != null && !level.isClientSide()) {
 			TickQueue queue = TickQueueManager.createQueue(tntAmount, 4);
 			int reach = 360;
 			final double[] spawnHeight = {30};
-			/*
-			double xDir = clickedPos.getX();
-			double yDir = clickedPos.getY();
-			double zDir = clickedPos.getZ();
-			 */
 			double min = 1.0;
 			double max = 4.0;
 			RandomSource random = RandomSource.create();
@@ -124,14 +112,13 @@ public class TNTStickClickBlock {
 							customTnt.setExplosionPower(6.0F);
 							customTnt.setExplodeOnContact(false);
 							customTnt.setDefaultGravity(0.15);
-							//Changes the initial angle by the value of angleStep every iteration so the TNTs are not static
+							//Changes the initial angle by the value of angleStep every iteration so the TNTs are not frozen
 							angle[0] += angleStep;
 							//Height of the cos curve every iteration
 							changePosition[0] += Math.PI / ((double) (tntAmount / 4) / 2);
 							spawnHeight[0] -= 0.25;
 							//Adds the primed TNT to the world
 							serverLevel.addFreshEntity(customTnt);
-							customTnt.addTag("customTnt");
 							if(customTnt.touchingUnloadedChunk()) {
 								customTnt.discard();
 							}
@@ -153,16 +140,5 @@ public class TNTStickClickBlock {
 		} else {
 			return InteractionResult.CONSUME;
 		}
-	}
-
-	//Use animation of item
-	public static ItemUseAnimation useAnimation(Item item, ItemStack itemStack) {
-		Consumable consumable = (Consumable)itemStack.get(DataComponents.CONSUMABLE);
-		return ItemUseAnimation.BLOCK;
-	}
-	//How fast we can use the item
-	public static int useDuration(Item item, ItemStack itemStack, LivingEntity user) {
-		//cooldown for next block hit
-		return 200;
 	}
 }

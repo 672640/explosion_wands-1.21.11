@@ -1,4 +1,4 @@
-package com.explosion_wands.sticks_click_air;
+package com.explosion_wands.wands;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -15,8 +15,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
-public class FireballStickShotgunClickAir extends Item {
-    public FireballStickShotgunClickAir(Properties properties) {
+public class FireballShotgunWand extends Item {
+    public FireballShotgunWand(Properties properties) {
         super(properties);
     }
 
@@ -49,6 +49,7 @@ public class FireballStickShotgunClickAir extends Item {
             double directlyUpDir = Math.toRadians(player.getXRot() + 90);
             //Looking directly down
             double directlyDownDir = Math.toRadians(player.getXRot() - 90);
+            //For debugging purposes
             /*
             if(directlyUpDir == 0) {
                 System.out.println("Directly up!");
@@ -57,7 +58,6 @@ public class FireballStickShotgunClickAir extends Item {
                 System.out.println("Directly down!");
             }
              */
-        //Vec3 dir = new Vec3(dirX, dirY, dirZ);
         Vec3 playerStartDirForward = player.getLookAngle().normalize();
         Vec3 directlyUp = new Vec3(0,1,0);
         if(directlyUpDir == 0 || directlyDownDir == 0) {
@@ -110,6 +110,3 @@ public class FireballStickShotgunClickAir extends Item {
         return null;
     }
  }
-
- //TODO: When we look directly up/down, the fireballs' positions are the exact same. Ensure they are
-//spread out the same way as when we look any other direction - band aid-fixed

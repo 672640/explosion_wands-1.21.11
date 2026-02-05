@@ -1,8 +1,7 @@
 package com.explosion_wands.item;
 
-import com.explosion_wands.item_classes.air.*;
+import com.explosion_wands.item_classes.*;
 import com.explosion_wands.initialization.ModInitialization;
-import com.explosion_wands.item_classes.block.*;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -11,139 +10,94 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 
 public class ModItems {
-//AIR
-
-    //TNT CHICKEN WAND
-    public static final ResourceKey<Item> TNT_STICK_AIR_KEY =
-            key("tnt_chicken_wand");
-
-    public static final Item TNT_STICK_AIR =
-            register(TNT_STICK_AIR_KEY,
-                    new TNTStickAirItem(
-                            new Item.Properties()
-                                    .stacksTo(1)
-                                    .setId(TNT_STICK_AIR_KEY)));
-
-    //TNT INFINITE WAND
-    public static final ResourceKey<Item> TNT_STICK_UNBOUND_AIR_KEY =
-            key("tnt_infinite_wand");
-
-    public static final Item TNT_STICK_UNBOUND_AIR =
-            register(TNT_STICK_UNBOUND_AIR_KEY,
-                    new TNTStickUnboundAirItem(
-                            new Item.Properties()
-                                    .stacksTo(1)
-                                    .setId(TNT_STICK_UNBOUND_AIR_KEY)));
-
-    //TNT TORNADO WAND
-    public static final ResourceKey<Item> TNT_STICK_MID_AIR_KEY =
-            key("tnt_tornado_wand");
-
-    public static final Item TNT_STICK_MID_AIR =
-            register(TNT_STICK_MID_AIR_KEY,
-                    new TNTStickMidAirItem(
-                            new Item.Properties()
-                                    .stacksTo(1)
-                                    .setId(TNT_STICK_MID_AIR_KEY)));
-
-    //FIREBALL WAND
-    public static final ResourceKey<Item> FIREBALL_STICK_AIR_KEY =
-            key("fireball_wand");
-
-    public static final Item FIREBALL_STICK_AIR =
-            register(FIREBALL_STICK_AIR_KEY,
-                    new FireballStickAirItem(
-                            new Item.Properties()
-                                    .stacksTo(1)
-                                    .setId(FIREBALL_STICK_AIR_KEY)));
-
-    //FIREBALL SHOTGUN WAND
-    public static final ResourceKey<Item> FIREBALL_STICK_SHOTGUN_AIR_KEY =
-            key("fireball_shotgun_wand");
-
-    public static final Item FIREBALL_STICK_SHOTGUN_AIR =
-            register(FIREBALL_STICK_SHOTGUN_AIR_KEY,
-                    new FireballStickShotgunAirItem(
-                            new Item.Properties()
-                                    .stacksTo(1)
-                                    .setId(FIREBALL_STICK_SHOTGUN_AIR_KEY)));
-
-    //FIREBALL HITSCAN WAND
-    public static final ResourceKey<Item> FIREBALL_STICK_HITSCAN_AIR_KEY =
-            key("fireball_hitscan_wand");
-
-    public static final Item FIREBALL_STICK_HITSCAN_AIR =
-            register(FIREBALL_STICK_HITSCAN_AIR_KEY,
-                    new FireballStickHitscanAirItem(
-                            new Item.Properties()
-                                    .stacksTo(1)
-                                    .setId(FIREBALL_STICK_HITSCAN_AIR_KEY)));
-//BLOCK
-
-    //FIREBALL BARRAGE WAND
-    public static final ResourceKey<Item> FIREBALL_STICK_BLOCK_KEY =
+//WANDS
+    //FIREBALL BARRAGE WAND (previously FIREBALL STICK BLOCK)
+    public static final ResourceKey<Item> FIREBALL_BARRAGE_WAND_KEY =
             key("fireball_barrage_wand");
 
-    public static final Item FIREBALL_STICK_BLOCK =
-            register(FIREBALL_STICK_BLOCK_KEY,
-                    new FireballStickBlockItem(
+    public static final Item FIREBALL_BARRAGE_WAND =
+            register(FIREBALL_BARRAGE_WAND_KEY,
+                    new FireballBarrageWandItem(
                             new Item.Properties()
                                     .stacksTo(1)
-                                    .setId(FIREBALL_STICK_BLOCK_KEY)));
+                                    .setId(FIREBALL_BARRAGE_WAND_KEY)));
 
+    //FIREBALL HITSCAN WAND (previously FIREBALL STICK HITSCAN AIR)
+    public static final ResourceKey<Item> FIREBALL_HITSCAN_WAND_KEY =
+            key("fireball_hitscan_wand");
 
-    //TNT SLOW BARRAGE WAND
-    public static final ResourceKey<Item> TNT_STICK_BLOCK_KEY =
-            key("tnt_slow_barrage_wand");
-
-    public static final Item TNT_STICK_BLOCK =
-            register(TNT_STICK_BLOCK_KEY,
-                    new TNTStickBlockItem(
+    public static final Item FIREBALL_HITSCAN_WAND =
+            register(FIREBALL_HITSCAN_WAND_KEY,
+                    new FireballHitscanWandItem(
                             new Item.Properties()
                                     .stacksTo(1)
-                                    .setId(TNT_STICK_BLOCK_KEY)));
+                                    .setId(FIREBALL_HITSCAN_WAND_KEY)));
 
-    //TNT INSTANT BARRAGE WAND
-    public static final ResourceKey<Item> TNT_STICK_UNBOUND_BLOCK_KEY =
-            key("tnt_instant_barrage_wand");
-
-    public static final Item TNT_STICK_UNBOUND_BLOCK =
-            register(TNT_STICK_UNBOUND_BLOCK_KEY,
-                    new TNTStickUnboundBlockItem(
-                            new Item.Properties()
-                                    .stacksTo(1)
-                                    .setId(TNT_STICK_UNBOUND_BLOCK_KEY)));
-
-    //TNT EXPLODING BLOCKS WAND
-    public static final ResourceKey<Item> TNT_STICK_FALLING_BLOCK_KEY =
-            key("tnt_exploding_blocks_wand");
-
-    public static final Item TNT_STICK_FALLING_BLOCK =
-            register(TNT_STICK_FALLING_BLOCK_KEY,
-                    new TNTStickFallingBlockItem(
-                            new Item.Properties()
-                                    .stacksTo(1)
-                                    .setId(TNT_STICK_FALLING_BLOCK_KEY)));
-    //TNT EXPLODING ENTITIES WAND
-    public static final ResourceKey<Item> TNT_STICK_ENTITIES_BLOCK_KEY =
-            key("tnt_exploding_entities_wand");
-
-    public static final Item TNT_STICK_ENTITIES_BLOCK =
-            register(TNT_STICK_ENTITIES_BLOCK_KEY,
-                    new TNTStickEntitiesBlockItem(
-                            new Item.Properties()
-                                    .stacksTo(1)
-                                    .setId(TNT_STICK_ENTITIES_BLOCK_KEY)));
-    //FIREBALL SCATTER WAND
-    public static final ResourceKey<Item> TNT_FIREBALL_STICK_EXPLOSION_BLOCK_KEY =
+    //FIREBALL SCATTER WAND (previously TNT FIREBALL STICK EXPLOSION BLOCK)
+    public static final ResourceKey<Item> FIREBALL_SCATTER_WAND_KEY =
             key("fireball_scatter_wand");
 
-    public static final Item TNT_FIREBALL_STICK_EXPLOSION_BLOCK =
-            register(TNT_FIREBALL_STICK_EXPLOSION_BLOCK_KEY,
-                    new TNTFireballStickExplosionBlockItem(
+    public static final Item FIREBALL_SCATTER_WAND =
+            register(FIREBALL_SCATTER_WAND_KEY,
+                    new FireballScatterWandItem(
                             new Item.Properties()
                                     .stacksTo(1)
-                                    .setId(TNT_FIREBALL_STICK_EXPLOSION_BLOCK_KEY)));
+                                    .setId(FIREBALL_SCATTER_WAND_KEY)));
+
+    //FIREBALL SHOTGUN WAND (previously FIREBALL STICK SHOTGUN AIR)
+    public static final ResourceKey<Item> FIREBALL_SHOTGUN_WAND_KEY =
+            key("fireball_shotgun_wand");
+
+    public static final Item FIREBALL_SHOTGUN_WAND =
+            register(FIREBALL_SHOTGUN_WAND_KEY,
+                    new FireballShotgunWandItem(
+                            new Item.Properties()
+                                    .stacksTo(1)
+                                    .setId(FIREBALL_SHOTGUN_WAND_KEY)));
+
+    //FIREBALL WAND (previously FIREBALL STICK AIR)
+    public static final ResourceKey<Item> FIREBALL_WAND_KEY =
+            key("fireball_wand");
+
+    public static final Item FIREBALL_WAND =
+            register(FIREBALL_WAND_KEY,
+                    new FireballWandItem(
+                            new Item.Properties()
+                                    .stacksTo(1)
+                                    .setId(FIREBALL_WAND_KEY)));
+
+    //TNT CHICKEN WAND (previously TNT STICK AIR)
+    public static final ResourceKey<Item> TNT_CHICKEN_WAND_KEY =
+            key("tnt_chicken_wand");
+
+    public static final Item TNT_CHICKEN_WAND =
+            register(TNT_CHICKEN_WAND_KEY,
+                    new TNTChickenWandItem(
+                            new Item.Properties()
+                                    .stacksTo(1)
+                                    .setId(TNT_CHICKEN_WAND_KEY)));
+
+    //TNT EXPLODING BLOCKS WAND (previously TNT STICK FALLING BLOCK)
+    public static final ResourceKey<Item> TNT_EXPLODING_BLOCKS_WAND_KEY =
+            key("tnt_exploding_blocks_wand");
+
+    public static final Item TNT_EXPLODING_BLOCKS_WAND =
+            register(TNT_EXPLODING_BLOCKS_WAND_KEY,
+                    new TNTExplodingBlocksWandItem(
+                            new Item.Properties()
+                                    .stacksTo(1)
+                                    .setId(TNT_EXPLODING_BLOCKS_WAND_KEY)));
+
+    //TNT EXPLODING ENTITIES WAND (previously TNT STICK ENTITIES BLOCK)
+    public static final ResourceKey<Item> TNT_EXPLODING_ENTITIES_WAND_KEY =
+            key("tnt_exploding_entities_wand");
+
+    public static final Item TNT_EXPLODING_ENTITIES_WAND =
+            register(TNT_EXPLODING_ENTITIES_WAND_KEY,
+                    new TNTExplodingEntitiesWandItem(
+                            new Item.Properties()
+                                    .stacksTo(1)
+                                    .setId(TNT_EXPLODING_ENTITIES_WAND_KEY)));
 
     //TNT FALLING WAND
     public static final ResourceKey<Item> TNT_FALLING_WAND_KEY =
@@ -155,6 +109,51 @@ public class ModItems {
                             new Item.Properties()
                                     .stacksTo(1)
                                     .setId(TNT_FALLING_WAND_KEY)));
+
+    //TNT INFINITE WAND (previously TNT STICK UNBOUND AIR)
+    public static final ResourceKey<Item> TNT_INFINITE_WAND_KEY =
+            key("tnt_infinite_wand");
+
+    public static final Item TNT_INFINITE_WAND =
+            register(TNT_INFINITE_WAND_KEY,
+                    new TNTInfiniteWandItem(
+                            new Item.Properties()
+                                    .stacksTo(1)
+                                    .setId(TNT_INFINITE_WAND_KEY)));
+
+    //TNT INSTANT BARRAGE WAND (previously TNT STICK UNBOUND BLOCK)
+    public static final ResourceKey<Item> TNT_INSTANT_BARRAGE_WAND_KEY =
+            key("tnt_instant_barrage_wand");
+
+    public static final Item TNT_INSTANT_BARRAGE_WAND =
+            register(TNT_INSTANT_BARRAGE_WAND_KEY,
+                    new TNTInstantBarrageWandItem(
+                            new Item.Properties()
+                                    .stacksTo(1)
+                                    .setId(TNT_INSTANT_BARRAGE_WAND_KEY)));
+
+    //TNT SLOW BARRAGE WAND (previously TNT STICK BLOCK)
+    public static final ResourceKey<Item> TNT_SLOW_BARRAGE_WAND_KEY =
+            key("tnt_slow_barrage_wand");
+
+    public static final Item TNT_SLOW_BARRAGE_WAND =
+            register(TNT_SLOW_BARRAGE_WAND_KEY,
+                    new TNTSlowBarrageWandItem(
+                            new Item.Properties()
+                                    .stacksTo(1)
+                                    .setId(TNT_SLOW_BARRAGE_WAND_KEY)));
+
+    //TNT TORNADO WAND (previously TNT STICK MID AIR)
+    public static final ResourceKey<Item> TNT_TORNADO_WAND_KEY =
+            key("tnt_tornado_wand");
+
+    public static final Item TNT_TORNADO_WAND =
+            register(TNT_TORNADO_WAND_KEY,
+                    new TNTTornadoWandItem(
+                            new Item.Properties()
+                                    .stacksTo(1)
+                                    .setId(TNT_TORNADO_WAND_KEY)));
+
 //HELPER METHODS
     //Creating the item's identity
     private static ResourceKey<Item> key(String name) {
@@ -168,7 +167,7 @@ public class ModItems {
         return Registry.register(BuiltInRegistries.ITEM, key, item);
     }
 
-    //Initializes the item
+    //Initializes the items
     public static void init() {}
 
 }

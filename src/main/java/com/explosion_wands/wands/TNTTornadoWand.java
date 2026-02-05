@@ -1,12 +1,14 @@
-package com.explosion_wands.sticks_click_air;
+package com.explosion_wands.wands;
 
 import com.explosion_wands.customFunctions.tnt.CustomTnt;
 import com.explosion_wands.entity.ModEntities;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -16,8 +18,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
-public class TNTStickUnboundClickAir extends Item {
-    public TNTStickUnboundClickAir(Properties properties) {
+public class TNTTornadoWand extends Item {
+    public TNTTornadoWand(Properties properties) {
         super(properties);
     }
 
@@ -32,6 +34,10 @@ public class TNTStickUnboundClickAir extends Item {
     }
 
     public static PrimedTnt asPrimedTnt(Item item, Level level, Player player, InteractionHand hand) {
+        int min = 20;
+        int max = 50;
+        RandomSource random = RandomSource.create();
+        int randomFuse = min + random.nextInt(max - min);
         int velocity = 4;
         BlockHitResult blockHitResult = getPlayerPOVHitResult(level, player, ClipContext.Fluid.NONE);
         double dirX = player.getX();
@@ -39,31 +45,41 @@ public class TNTStickUnboundClickAir extends Item {
         double dirZ = player.getZ();
 
         Vec3 playerLookDir = player.getLookAngle();
+        Vec3 playerStartDir = player.getEyePosition();
+        Vec3 playerEndDir = playerStartDir.add(playerLookDir.scale(1));
         playerLookDir.add(dirX, dirY, dirZ).normalize();
         CustomTnt customTnt = ModEntities.CUSTOM_TNT.create(level, EntitySpawnReason.TRIGGERED);
         if(customTnt != null) {
-            if (blockHitResult.getType() == HitResult.Type.BLOCK) {
+            if(blockHitResult.getType() != HitResult.Type.BLOCK) {
                 Vec3 customTntInAirPosition = player.position().add(0, player.getEyeHeight() - 0.25, 0)
-                        .add(playerLookDir.scale(3.0));
+                        .add(playerLookDir.scale(5.0));
                 customTnt.moveOrInterpolateTo(customTntInAirPosition);
-                } else {
-                //Works for the most part
+            } else {
+                //Does not work if it's at the very corner of a block, but it's more than good enough
                 Vec3 customTntInAirPosition = blockHitResult.getLocation();
                 customTnt.moveOrInterpolateTo(customTntInAirPosition);
-                }
-                customTnt.setDeltaMovement(playerLookDir.scale(velocity));
-                level.playSound(null, player.getX(), player.getY(), player.getZ(),
-                        SoundEvents.TNT_PRIMED, SoundSource.PLAYERS, 0.4F, 1.0F);
-                customTnt.setDiscardOnFirstUse(false);
-                customTnt.setExplodeOnContact(true);
-                customTnt.setExplosionPower(10F);
-                customTnt.setFuse(500);
-                customTnt.addTag("customTnt");
-                if(customTnt.touchingUnloadedChunk()) {
-                customTnt.discard();
-                }
-                return customTnt;
             }
+            customTnt.setDeltaMovement(playerLookDir.scale(velocity));
+            level.playSound(null, player.getX(), player.getY(), player.getZ(),
+                    SoundEvents.TNT_PRIMED, SoundSource.PLAYERS, 0.4F, 1.0F);
+            customTnt.setTornado(true);
+            customTnt.setGradualEntitySpawnAfterExplosion(false);
+            customTnt.setEntityToSpawn(EntityType.TNT);
+            customTnt.setFuse(randomFuse);
+            customTnt.setExplodeOnContact(true);
+            customTnt.setExplosionPower(0F);
+            customTnt.setEntitySpawnAfterExplosion(true);
+            customTnt.setCircle(true);
+            customTnt.setAmplitude(20);
+            customTnt.setEntityAmount(200);
+            customTnt.setKillEntitiesAfterLoop(false);
+            customTnt.setYIncrement(0.5);
+            if(customTnt.touchingUnloadedChunk()) {
+                customTnt.discard();
+            }
+            return customTnt;
+        }
+
         return null;
-}
+    }
 }

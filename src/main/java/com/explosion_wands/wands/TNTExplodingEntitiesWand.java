@@ -1,4 +1,4 @@
-package com.explosion_wands.sticks_click_block;
+package com.explosion_wands.wands;
 
 import com.explosion_wands.customFunctions.tnt.CustomTnt;
 import com.explosion_wands.entity.ModEntities;
@@ -8,42 +8,38 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
-import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
-public class TNTFallingWand {
+public class TNTExplodingEntitiesWand {
 
     //Hits a block
-    public static InteractionResult use(Item item, Level level, Player player, InteractionHand hand)  {
+    public static InteractionResult use(Item item, Level level, Player player, InteractionHand hand) {
 
         if (level instanceof ServerLevel serverLevel && player != null && !level.isClientSide()) {
             int maxEntities = ExplosionEntities.maxEntities;
             int fuse = ExplosionEntities.fuse;
-            int fuse2 = ExplosionEntities.fuse2;
-            fuse2 = 30;
             int spawnedEntities = ExplosionEntities.spawnedEntities;
             float minExplosion = ExplosionEntities.minExplosion;
-            minExplosion = 0.5F;
             float maxExplosion = ExplosionEntities.maxExplosion;
-            maxExplosion = 4F;
             int minIncrement = ExplosionEntities.minIncrement;
             int maxIncrement = ExplosionEntities.maxIncrement;
             int minRandomEntities = ExplosionEntities.minRandomEntity;
             int maxRandomEntities = ExplosionEntities.maxRandomEntity;
-            double maxRandomPos = ExplosionEntities.randomPos;
             RandomSource random = RandomSource.create();
+            double maxRandomPos = ExplosionEntities.randomPos;
             float randomExplosion = (minExplosion + random.nextFloat() * (maxExplosion - minExplosion));
             int randomIncrement = minIncrement + random.nextInt(maxIncrement - minIncrement);
             int randomEntity = minRandomEntities + random.nextInt(maxRandomEntities - minRandomEntities);
             double randomPos = (maxRandomPos + random.nextDouble() * (maxRandomPos - 0));
+
             int increment = ExplosionEntities.increment;
             double lessThanTheta = ExplosionEntities.lessThanTheta;
             double lessThanPhi = ExplosionEntities.lessThanPhi;
@@ -53,7 +49,6 @@ public class TNTFallingWand {
             double y = ExplosionEntities.y;
             double z = ExplosionEntities.z;
             double r = ExplosionEntities.r;
-
             int spawnHeight = ExplosionEntities.spawnHeight;
             int reach = ExplosionEntities.reach;
             Vec3 playerEyeStart = player.getEyePosition();
@@ -66,53 +61,90 @@ public class TNTFallingWand {
                     ClipContext.Fluid.NONE,
                     player
             ));
+            EntityType<?> entityToSpawn = EntityType.CHICKEN;
+            //For debugging purposes
+            String entityType = "";
             BlockPos target = blockHitResult.getBlockPos();
             //Failsafe in-case we spawn more entities than is intended
-            if(spawnedEntities <= maxEntities) {
+            if (spawnedEntities <= maxEntities) {
                 for (double theta = ExplosionEntities.theta; theta <= lessThanTheta; theta += incrementTheta) {
                     for (double phi = ExplosionEntities.phi; phi <= lessThanPhi; phi += incrementPhi) {
-                        //Adds the entity to the world
+                        if (randomEntity <= spawnedEntities / 8 && spawnedEntities >= 0) {
+                            entityToSpawn = EntityType.CHICKEN;
+                            entityType = entityToSpawn.toString();
+                        }
+                        if (randomEntity <= (spawnedEntities / 4) && randomEntity > (spawnedEntities / 8)) {
+                            entityToSpawn = EntityType.BREEZE;
+                            entityType = entityToSpawn.toString();
+                        }
+                        if (randomEntity <= (spawnedEntities / 8) * 2 + (spawnedEntities / 8) && randomEntity > (spawnedEntities / 4)) {
+                            entityToSpawn = EntityType.COW;
+                            entityType = entityToSpawn.toString();
+                        }
+                        if (randomEntity <= spawnedEntities / 2 && randomEntity > (spawnedEntities / 8) * 2 + (spawnedEntities / 8)) {
+                            entityToSpawn = EntityType.BAT;
+                            entityType = entityToSpawn.toString();
+                        }
+                        if (randomEntity <= (spawnedEntities / 2) + (spawnedEntities / 8) && randomEntity > (spawnedEntities / 2)) {
+                            entityToSpawn = EntityType.ARMADILLO;
+                            entityType = entityToSpawn.toString();
+                        }
+                        if (randomEntity <= (spawnedEntities / 2) + (spawnedEntities / 4) && randomEntity > (spawnedEntities / 2) + (spawnedEntities / 8)) {
+                            entityToSpawn = EntityType.GOAT;
+                            entityType = entityToSpawn.toString();
+                        }
+                        if (randomEntity <= spawnedEntities - (spawnedEntities / 8) && randomEntity > (spawnedEntities / 2) + (spawnedEntities / 4)) {
+                            entityToSpawn = EntityType.PIG;
+                            entityType = entityToSpawn.toString();
+                        }
+                        if (randomEntity <= spawnedEntities && randomEntity > spawnedEntities - (spawnedEntities / 8)) {
+                            entityToSpawn = EntityType.SNOW_GOLEM;
+                            entityType = entityToSpawn.toString();
+                        }
+                        Entity entity = entityToSpawn.create(level, EntitySpawnReason.TRIGGERED);
                         CustomTnt customTnt = ModEntities.CUSTOM_TNT.create(level, EntitySpawnReason.TRIGGERED);
-                        CustomTnt customTnt2 = ModEntities.CUSTOM_TNT.create(level, EntitySpawnReason.TRIGGERED);
                         //This does not make a perfect circle, but it should not be noticeable
-                            if (customTnt != null && increment <= 1) {
-                                customTnt.setPos(target.getX(),
-                                        target.getY() + spawnHeight,
-                                        target.getZ()
-                                );
-                                customTnt.setFuse(fuse);
-                                customTnt.setExplosionPower(randomIncrement);
-                                customTnt.addTag("customTnt");
-                                serverLevel.addFreshEntity(customTnt);
-                            }
-                        if (customTnt2 != null) {
+                        if (increment <= randomExplosion && customTnt != null) {
+                            customTnt.setPos(target.getX(),
+                                    target.getY() + spawnHeight,
+                                    target.getZ()
+                            );
+                            serverLevel.addFreshEntity(customTnt);
+                            customTnt.setFuse(fuse);
+                            customTnt.setExplosionPower(randomIncrement);
+                        }
+                        if (entity != null) {
                             if (x != 0 && y != 0 && z != 0) {
-                                customTnt2.setPos(target.getX() + x,
+                                entity.setPos(target.getX() + x,
                                         target.getY() + y + spawnHeight,
                                         target.getZ() + z
                                 );
-                                customTnt2.setFuse(500);
-                                customTnt2.setExplodeOnContact(true);
-                                customTnt2.setExplosionPower(5F);
-                                customTnt2.addTag("customTnt");
-                                serverLevel.addFreshEntity(customTnt2);
+                                serverLevel.addFreshEntity(entity);
                             } else {
-                                customTnt2.discard();
+                                entity.discard();
                             }
-                            x = r * Math.sin(theta) * Math.cos(phi) ;
-                            y = r * Math.cos(theta);
-                            z = r * Math.sin(theta) * Math.sin(phi);
+                            x = r * Math.sin(theta) * Math.cos(phi) + randomPos;
+                            y = r * Math.cos(theta) + randomPos;
+                            z = r * Math.sin(theta) * Math.sin(phi) + randomPos;
                             increment++;
                         }
                     }
                 }
+                /*
                 System.out.println(
                         "Pre-calculated entities:   " + spawnedEntities
                                 + ",   entities:   " + increment
                                 + ",   random explosion:   " + randomExplosion
-                                + ",   random increment:   " + 1
+                                + ",   random increment:   " + randomIncrement
                 );
-            //Plays a sound when a block is clicked
+                 */
+                /*
+                System.out.println(
+                        ",   random entity number:    " + randomEntity
+                                + ",   entity type: " + entityType
+                );
+                 */
+                //Plays a sound when a block is clicked
             /*
             level.playSound(null,
                     player.getX(),
@@ -123,6 +155,7 @@ public class TNTFallingWand {
                     0.4F,
                     1.0F);
              */
+
             }
             return InteractionResult.SUCCESS;
         } else {

@@ -1,7 +1,6 @@
 package com.explosion_wands.entity;
 
 import com.explosion_wands.customFunctions.falling_block.CustomFallingBlockEntity;
-import com.explosion_wands.customFunctions.fireball.CustomFireball;
 import com.explosion_wands.customFunctions.tnt.CustomTnt;
 import com.explosion_wands.initialization.ModInitialization;
 import net.minecraft.core.Registry;
@@ -12,6 +11,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.*;
 
 public class ModEntities {
+
     //CUSTOM TNT
     public static final ResourceKey<EntityType<?>> CUSTOM_TNT_KEY =
             key("custom_tnt");
@@ -23,18 +23,6 @@ public class ModEntities {
                                     .of(CustomTnt::new, MobCategory.MISC)
                                     .sized(0.98F, 0.98F)
                                     .build(CUSTOM_TNT_KEY));
-
-    //CUSTOM FIREBALL
-    public static final ResourceKey<EntityType<?>> CUSTOM_FIREBALL_KEY =
-            key("custom_fireball");
-
-    public static final EntityType<CustomFireball> CUSTOM_FIREBALL =
-            register(CUSTOM_FIREBALL_KEY,
-                    EntityType
-                            .Builder
-                            .of(CustomFireball::new, MobCategory.MISC)
-                            .sized(0.98F, 0.98F)
-                            .build(CUSTOM_FIREBALL_KEY));
 
     //CUSTOM FALLING BLOCK ENTITY
     public static final ResourceKey<EntityType<?>> CUSTOM_FALLING_BLOCK_ENTITY_KEY =

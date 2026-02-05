@@ -7,8 +7,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
+//Currently unused, but might be used in the future if some more finetuning is needed
 public class CustomFallingBlockEntity extends FallingBlockEntity {
-
     public CustomFallingBlockEntity(EntityType<? extends FallingBlockEntity> type, Level level) {
         super(type, level);
     }

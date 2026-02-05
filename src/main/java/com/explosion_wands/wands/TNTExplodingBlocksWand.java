@@ -1,4 +1,4 @@
-package com.explosion_wands.sticks_click_block;
+package com.explosion_wands.wands;
 
 import com.explosion_wands.customFunctions.tnt.CustomTnt;
 import com.explosion_wands.entity.ModEntities;
@@ -19,18 +19,17 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
-public class TNTStickFallingClickBlock {
+public class TNTExplodingBlocksWand {
 
     //Hits a block
     public static InteractionResult use(Item item, Level level, Player player, InteractionHand hand)  {
-
         if (level instanceof ServerLevel serverLevel && player != null && !level.isClientSide()) {
             int maxEntities = ExplosionEntities.maxEntities;
             int fuse = ExplosionEntities.fuse;
             int spawnedEntities = ExplosionEntities.spawnedEntities;
-            float minExplosion = ExplosionEntities.minExplosion;
+            float minExplosion;
             minExplosion = 0.5F;
-            float maxExplosion = ExplosionEntities.maxExplosion;
+            float maxExplosion;
             maxExplosion = 4F;
             int minIncrement = ExplosionEntities.minIncrement;
             int maxIncrement = ExplosionEntities.maxIncrement;
@@ -65,6 +64,7 @@ public class TNTStickFallingClickBlock {
                     player
             ));
             BlockState blockToSpawn = Blocks.DIAMOND_BLOCK.defaultBlockState();
+            //Purely for debugging purposes
             String blockType = "";
             BlockPos target = blockHitResult.getBlockPos();
             //Failsafe in-case we spawn more entities than is intended
@@ -123,7 +123,6 @@ public class TNTStickFallingClickBlock {
                             serverLevel.addFreshEntity(customTnt);
                             customTnt.setFuse(fuse);
                             customTnt.setExplosionPower(randomIncrement);
-                            customTnt.addTag("customTnt");
                         }
                         if(x != 0 && y != 0 && z != 0) {
                             fallingBlockEntity.setPos(target.getX() + x,
@@ -133,7 +132,6 @@ public class TNTStickFallingClickBlock {
                         } else {
                             fallingBlockEntity.discard();
                         }
-                        //serverLevel.addFreshEntity(fallingBlockEntity);
                         x = r * Math.sin(theta) * Math.cos(phi) + randomPos;
                         y = r * Math.cos(theta) + randomPos;
                         z = r * Math.sin(theta) * Math.sin(phi) + randomPos;
@@ -175,4 +173,3 @@ public class TNTStickFallingClickBlock {
         }
     }
 }
-//Maybe be able to freeze and unfreeze the falling blocks

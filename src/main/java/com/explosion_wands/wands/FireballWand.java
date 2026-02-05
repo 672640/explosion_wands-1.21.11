@@ -1,4 +1,4 @@
-package com.explosion_wands.sticks_click_air;
+package com.explosion_wands.wands;
 
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -18,8 +18,8 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
-public class FireballStickClickAir extends Item {
-    public FireballStickClickAir(Properties properties) {
+public class FireballWand extends Item {
+    public FireballWand(Properties properties) {
         super(properties);
     }
 
@@ -45,14 +45,11 @@ public class FireballStickClickAir extends Item {
         int reach = 360;
         //Clicks on air/liquid
         int explosionPowerAir = 40;
-        //Clicks on entity
-        int explosionPowerEntity = 1;
         //fireball's velocity
         int velocity = 10;
         double dirX = player.getX();
         double dirY = player.getY();
         double dirZ = player.getZ();
-        //Vec3 dir = new Vec3(dirX, dirY, dirZ);
         Vec3 playerLookDir = player.getLookAngle();
         Vec3 playerStartDir = player.getEyePosition();
         Vec3 playerEndDir = playerStartDir.add(playerLookDir.scale(reach));
@@ -83,7 +80,7 @@ public class FireballStickClickAir extends Item {
         //Set's the fireball's velocity
         fireballAir.setDeltaMovement(playerLookDir.scale(velocity));
         fireballAir.addTag("fireball");
-        //Plays sound when cliking on air/liquid
+        //Plays sound when clicking on air/liquid
         level.playSound(null, player.getX(), player.getY(), player.getZ(),
                 SoundEvents.FIRECHARGE_USE, SoundSource.PLAYERS, 0.4F, 1.0F);
         //Spawns the fireball

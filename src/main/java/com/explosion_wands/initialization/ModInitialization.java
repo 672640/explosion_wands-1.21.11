@@ -12,92 +12,93 @@ public class ModInitialization implements ModInitializer {
     public static final String MOD_ID = "explosion_wands";
 
     public void onInitialize() {
-        ModItems.init();
-        //CUSTOM TNT
-        ModEntities.init();
 
-//AIR
-
-        //TNT STICK AIR
+        //FIREBALL BARRAGE WAND
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES)
-                .register(entries -> entries.accept(ModItems.TNT_STICK_AIR));
+                .register(entries -> entries.accept(ModItems.FIREBALL_BARRAGE_WAND));
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.COMBAT)
-                .register(entries -> entries.accept(ModItems.TNT_STICK_AIR));
+                .register(entries -> entries.accept(ModItems.FIREBALL_BARRAGE_WAND));
 
-        //TNT STICK UNBOUND AIR
+        //FIREBALL HITSCAN WAND
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES)
-                .register(entries -> entries.accept(ModItems.TNT_STICK_UNBOUND_AIR));
+                .register(entries -> entries.accept(ModItems.FIREBALL_HITSCAN_WAND));
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.COMBAT)
-                .register(entries -> entries.accept(ModItems.TNT_STICK_UNBOUND_AIR));
+                .register(entries -> entries.accept(ModItems.FIREBALL_HITSCAN_WAND));
 
-        //TNT STICK SHOTGUN AIR
+        //FIREBALL SCATTER WAND
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES)
-                .register(entries -> entries.accept(ModItems.FIREBALL_STICK_SHOTGUN_AIR));
+                .register(entries -> entries.accept(ModItems.FIREBALL_SCATTER_WAND));
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.COMBAT)
-                .register(entries -> entries.accept(ModItems.FIREBALL_STICK_SHOTGUN_AIR));
+                .register(entries -> entries.accept(ModItems.FIREBALL_SCATTER_WAND));
 
-        //TNT STICK MID AIR
-
+        //FIREBALL SHOTGUN WAND
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES)
-                .register(entries -> entries.accept(ModItems.TNT_STICK_MID_AIR));
+                .register(entries -> entries.accept(ModItems.FIREBALL_SHOTGUN_WAND));
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.COMBAT)
-                .register(entries -> entries.accept(ModItems.TNT_STICK_MID_AIR));
+                .register(entries -> entries.accept(ModItems.FIREBALL_SHOTGUN_WAND));
 
-        //FIREBALL STICK AIR
+        //FIREBALL WAND
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES)
-                .register(entries -> entries.accept(ModItems.FIREBALL_STICK_AIR));
+                .register(entries -> entries.accept(ModItems.FIREBALL_WAND));
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.COMBAT)
-                .register(entries -> entries.accept(ModItems.FIREBALL_STICK_AIR));
+                .register(entries -> entries.accept(ModItems.FIREBALL_WAND));
 
-        //FIREBALL STICK HITSCAN AIR
+        //TNT CHICKEN WAND
+        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES)
+                .register(entries -> entries.accept(ModItems.TNT_CHICKEN_WAND));
+        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.COMBAT)
+                .register(entries -> entries.accept(ModItems.TNT_CHICKEN_WAND));
 
+        //TNT EXPLODING BLOCKS WAND
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES)
-                .register(entries -> entries.accept(ModItems.FIREBALL_STICK_HITSCAN_AIR));
+                .register(entries -> entries.accept(ModItems.TNT_EXPLODING_BLOCKS_WAND));
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.COMBAT)
-                .register(entries -> entries.accept(ModItems.FIREBALL_STICK_HITSCAN_AIR));
+                .register(entries -> entries.accept(ModItems.TNT_EXPLODING_BLOCKS_WAND));
 
-//BLOCK
-
-        //FIREBALL STICK BLOCK
+        //TNT EXPLODING ENTITIES WAND
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES)
-                .register(entries -> entries.accept(ModItems.FIREBALL_STICK_BLOCK));
+                .register(entries -> entries.accept(ModItems.TNT_EXPLODING_ENTITIES_WAND));
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.COMBAT)
-                .register(entries -> entries.accept(ModItems.FIREBALL_STICK_BLOCK));
-
-        //TNT STICK UNBOUND BLOCK
-        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES)
-                .register(entries -> entries.accept(ModItems.TNT_STICK_BLOCK));
-        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.COMBAT)
-                .register(entries -> entries.accept(ModItems.TNT_STICK_BLOCK));
-
-        //TNT STICK FALLING BLOCK
-        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES)
-                .register(entries -> entries.accept(ModItems.TNT_STICK_FALLING_BLOCK));
-        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.COMBAT)
-                .register(entries -> entries.accept(ModItems.TNT_STICK_FALLING_BLOCK));
-        //TNT STICK ENTITIES BLOCK
-        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES)
-                .register(entries -> entries.accept(ModItems.TNT_STICK_ENTITIES_BLOCK));
-        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.COMBAT)
-                .register(entries -> entries.accept(ModItems.TNT_STICK_ENTITIES_BLOCK));
-        //FIREBALL STICK BLOCK
-        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES)
-                .register(entries -> entries.accept(ModItems.TNT_STICK_UNBOUND_BLOCK));
-        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.COMBAT)
-                .register(entries -> entries.accept(ModItems.TNT_STICK_UNBOUND_BLOCK));
-
-        //TNT FIREBALL STICK EXPLOSION BLOCK
-        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES)
-                .register(entries -> entries.accept(ModItems.TNT_FIREBALL_STICK_EXPLOSION_BLOCK));
-        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.COMBAT)
-                .register(entries -> entries.accept(ModItems.TNT_FIREBALL_STICK_EXPLOSION_BLOCK));
+                .register(entries -> entries.accept(ModItems.TNT_EXPLODING_ENTITIES_WAND));
 
         //TNT FALLING WAND
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES)
                 .register(entries -> entries.accept(ModItems.TNT_FALLING_WAND));
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.COMBAT)
                 .register(entries -> entries.accept(ModItems.TNT_FALLING_WAND));
+
+        //TNT INFINITE WAND
+        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES)
+                .register(entries -> entries.accept(ModItems.TNT_INFINITE_WAND));
+        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.COMBAT)
+                .register(entries -> entries.accept(ModItems.TNT_INFINITE_WAND));
+
+        //TNT INSTANT BARRAGE WAND
+        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES)
+                .register(entries -> entries.accept(ModItems.TNT_INSTANT_BARRAGE_WAND));
+        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.COMBAT)
+                .register(entries -> entries.accept(ModItems.TNT_INSTANT_BARRAGE_WAND));
+
+        //TNT SLOW BARRAGE WAND
+        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES)
+                .register(entries -> entries.accept(ModItems.TNT_SLOW_BARRAGE_WAND));
+        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.COMBAT)
+                .register(entries -> entries.accept(ModItems.TNT_SLOW_BARRAGE_WAND));
+
+        //TNT TORNADO WAND
+        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES)
+                .register(entries -> entries.accept(ModItems.TNT_TORNADO_WAND));
+        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.COMBAT)
+                .register(entries -> entries.accept(ModItems.TNT_TORNADO_WAND));
+
+
         //Makes the tick-based placement of TNT work properly
         ServerTickEvents.END_SERVER_TICK.register(server -> TickQueueManager.tick());
+
+        //Initialized the items
+        ModItems.init();
+
+        //CUSTOM TNT
+        ModEntities.init();
     }
 }

@@ -1,0 +1,27 @@
+package com.explosion_wands.item_classes;
+
+import com.explosion_wands.wands.TNTChickenWand;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.item.PrimedTnt;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.Level;
+import org.jspecify.annotations.NonNull;
+
+public class TNTChickenWandItem extends Item {
+    public TNTChickenWandItem(Item.Properties properties) {
+        super(properties);
+    }
+
+    @Override
+    public @NonNull InteractionResult use(Level level, @NonNull Player player, @NonNull InteractionHand hand) {
+        if (!level.isClientSide()) {
+            PrimedTnt customTnt = TNTChickenWand.asPrimedTnt(this, level, player, hand);
+            if (customTnt != null) {
+                level.addFreshEntity(customTnt);
+            }
+        }
+        return TNTChickenWand.use(this, level, player, hand);
+    }
+}

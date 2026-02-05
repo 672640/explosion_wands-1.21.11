@@ -22,13 +22,6 @@ public class CustomTnt extends PrimedTnt {
 
     public CustomTnt(EntityType<? extends CustomTnt> type, Level level) {
         super(type, level);
-        /*
-        //Global counter that counts how many primedTNTs have been spawned. Resets on
-        //every world reload, however
-        if (!level().isClientSide()) {
-            aliveTNTAmount++;
-        }
-         */
     }
 
     //Ability to separate the values for the explosion power of TNTs for different classes
@@ -88,18 +81,6 @@ public class CustomTnt extends PrimedTnt {
         QUEUE.add(task);
     }
 
-    private static final Logger LOGGER = LogUtils.getLogger();
-
-    @Override
-    public void remove(RemovalReason reason) {
-        super.remove(reason);
-        /*
-        if (!level().isClientSide()) {
-            aliveTNTAmount--;
-        }
-         */
-    }
-
     @Override
     public void tick() {
         //Inherits logic from tick(), where we only override what's specified under. Otherwise, we have to put *all* the logic that tick() uses here
@@ -123,9 +104,6 @@ public class CustomTnt extends PrimedTnt {
 
     //Responsible for exploding the TNT at its current position
     protected void explode() {
-        BlockPos pos = this.blockPosition();
-        BlockState state = level().getBlockState(pos);
-        Block block = state.getBlock();
         if(level() instanceof ServerLevel serverLevel && !entitySpawnAfterExplosion) {
             level().explode(
                     this,
@@ -206,10 +184,7 @@ public class CustomTnt extends PrimedTnt {
                         if(entityToSpawn != EntityType.TNT) {
                             //Used in to apply the LivingEntityMixin logic to this entity only, instead of globally to all entities of this type
                             entity.addTag("no_drops");
-                        } else {
-                            entity.addTag("customTnt");
                         }
-
                         //Adds the spawned entities to a list so we are able to use them later outside the loop
                         spawnedEntities.add(entity);
                         entity.setNoGravity(!isTornado);
@@ -402,16 +377,6 @@ public class CustomTnt extends PrimedTnt {
         this.discardTNT = discard;
     }
 
-    /*
-        //If something else will happen after the explosion (other than spawning entities)
-        public boolean getAfterSpawnEffects() {
-            return afterSpawnEffects;
-        }
-
-        public void setAfterSpawnEffects(boolean afterSpawnEffects) {
-            this.afterSpawnEffects = afterSpawnEffects;
-        }
-     */
     //Individual, delayed explosions on each entity if setAfterSpawnEffects = true
     public boolean getIndividualEntityExplosions() {
         return individualEntityExplosions;
@@ -462,9 +427,3 @@ public class CustomTnt extends PrimedTnt {
         this.killEntitiesAfterLoop = kill;
     }
 }
-
-//TODO:
-//Maybe a limit to how many times a TNT can explode as a fall-back
-//Make the final explosion for discardTNT match the explosion power before the final explosion --workarounded
-//Make entities and other things affected not drop items to improve performance
-//Make the mid air primedTNTs be able to be adjusted

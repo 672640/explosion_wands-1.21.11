@@ -1,4 +1,4 @@
-package com.explosion_wands.sticks_click_block;
+package com.explosion_wands.wands;
 
 import com.explosion_wands.customFunctions.tnt.CustomTnt;
 import com.explosion_wands.entity.ModEntities;
@@ -16,7 +16,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
-public class TNTStickUnboundClickBlock {
+public class TNTInstantBarrageWand {
 
     //Hits a block
     public static InteractionResult use(Item item, Level level, Player player, InteractionHand hand)  {
@@ -30,18 +30,11 @@ public class TNTStickUnboundClickBlock {
         if (level instanceof ServerLevel serverLevel && player != null && !level.isClientSide()) {
             int spawnHeight = 30;
             int reach = 360;
-            /*
-            double xDir = clickedPos.getX();
-            double yDir = clickedPos.getY();
-            double zDir = clickedPos.getZ();
-             */
             int tntAmount = 80;
             //Makes the start spawn angle of the TNT be equal to the direction the player is facing (default (0): east)
             final double[] angle = {Math.toRadians(player.getYRot() + 90)};
             double angleStep = Math.PI / ((double) tntAmount / 2); //How smooth the curve looks
             double amplitude = 15; //Width of the curve
-            //Can be replaced with a hardcoded float instead, since all the primedTNTs spawn at the same time
-            //int tntFuseTimer = (tntAmount * 50) / 50 ; //50 ms = 1 tick
             Vec3 playerEyeStart = player.getEyePosition();
             Vec3 playerLookAngle = player.getLookAngle();
             Vec3 playerEyeEnd = playerEyeStart.add(playerLookAngle.scale(reach));
@@ -56,9 +49,10 @@ public class TNTStickUnboundClickBlock {
             final double[] changePosition = {0}; //Initial position of the starting TNT
             for (int i = 0; i < tntAmount; i++) {
                 int finalI = i;
-                    //Creates primed TNTs every iteration
-                    CustomTnt customTnt = ModEntities.CUSTOM_TNT.create(level, EntitySpawnReason.TRIGGERED);
-                    //X dir: cos, Z dir: sin, makes a circle
+                //Creates primed TNTs every iteration
+                CustomTnt customTnt = ModEntities.CUSTOM_TNT.create(level, EntitySpawnReason.TRIGGERED);
+                //X dir: cos, Z dir: sin, makes a circle
+                if (customTnt != null) {
                     customTnt.setPos(target.getX() + (Math.cos(angle[0]) * amplitude),
                             target.getY() + spawnHeight,
                             target.getZ() + (Math.sin(angle[0]) * amplitude));
@@ -68,14 +62,14 @@ public class TNTStickUnboundClickBlock {
                     customTnt.setDefaultGravity(0.04);
                     //Adds the primed TNT to the world
                     serverLevel.addFreshEntity(customTnt);
-                    if(customTnt.touchingUnloadedChunk()) {
+                    if (customTnt.touchingUnloadedChunk()) {
                         customTnt.discard();
                     }
-                    customTnt.addTag("customTnt");
                     //Changes the initial angle by the value of angleStep every iteration so the TNTs are not static
                     angle[0] += angleStep;
                     //Height of the cos curve every iteration
                     changePosition[0] += Math.PI / ((double) (tntAmount / 4) / 2);
+                }
             }
             //Plays a sound when a block is clicked
             level.playSound(null,

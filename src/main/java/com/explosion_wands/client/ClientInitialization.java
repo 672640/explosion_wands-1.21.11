@@ -12,13 +12,8 @@ public class ClientInitialization implements ClientModInitializer {
                 ModEntities.CUSTOM_TNT,
                 //Renders the CustomTnt like the vanilla TNT
                 TntRenderer::new);
-/*
-        EntityRenderers.register(
-                ModEntities.CUSTOM_FIREBALL,
-                (Context ctx) -> new FlyingItemEntityRenderer<>(ctx, fireball_shotgun_wand.png, 1.0f);
-        );
- */
 
+        //Renders the CustomFallingBlockEntity like the vanilla falling block entity
         EntityRenderers.register(
                 ModEntities.CUSTOM_FALLING_BLOCK_ENTITY,
                 FallingBlockRenderer::new);
