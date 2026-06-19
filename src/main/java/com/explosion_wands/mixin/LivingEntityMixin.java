@@ -18,7 +18,7 @@ public abstract class LivingEntityMixin {
     //Makes entities which include this tag not drop items upon death
     private void cancelDrops(ServerLevel level, DamageSource source, CallbackInfo ci) {
         LivingEntity spawnedFromExplosion = (LivingEntity)(Object)this;
-            if(spawnedFromExplosion.getTags().contains("no_drops")) {
+            if(spawnedFromExplosion.entityTags().contains("no_drops")) {
                 ci.cancel();
             }
     }

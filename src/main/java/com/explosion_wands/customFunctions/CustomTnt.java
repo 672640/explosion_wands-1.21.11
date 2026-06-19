@@ -29,7 +29,7 @@ public class CustomTnt extends PrimedTnt {
     //onGround makes the primedTNT only explode when it hits a horizontal surface, not a vertical surface
     boolean explodeOnContact = false;
     //Type of entity that will spawn after explosion
-    EntityType<?> entityToSpawn = EntityType.CHICKEN;
+    EntityType<?> entityToSpawn = EntityTypes.CHICKEN;
     //Amount of entities spawned after explosion
     int entityAmount = 20;
     //If entities will spawn after explosion, before the primed TNT is discarded
@@ -191,7 +191,7 @@ public class CustomTnt extends PrimedTnt {
                             changeZ[0] += zChange;
                         }
                         server.addFreshEntity(entity);
-                        if(entityToSpawn != EntityType.TNT) {
+                        if(entityToSpawn != EntityTypes.TNT) {
                             //Used in to apply the LivingEntityMixin logic to this entity only, instead of globally to all entities of this type
                             entity.addTag("no_drops");
                         }

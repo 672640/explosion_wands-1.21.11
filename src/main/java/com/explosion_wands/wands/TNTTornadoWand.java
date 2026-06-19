@@ -7,6 +7,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -29,7 +30,7 @@ public class TNTTornadoWand extends Item {
         RandomSource random = RandomSource.create();
         boolean tornado = true;
         boolean gradualEntitySpawnAfterExplosion = false;
-        EntityType<?> entityToSpawn = EntityType.TNT;
+        EntityType<?> entityToSpawn = EntityTypes.TNT;
         boolean explodeOnContact = true;
         float explosionPower = 0.0F;
         boolean entitySpawnAfterExplosion = true;

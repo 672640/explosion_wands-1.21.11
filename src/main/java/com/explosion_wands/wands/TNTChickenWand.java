@@ -6,6 +6,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -39,7 +40,7 @@ public class TNTChickenWand extends Item {
         boolean circle = true;
         double amplitude = 10.0;
         double yChange = 10.0;
-        EntityType<?> entityToSpawn = EntityType.CHICKEN;
+        EntityType<?> entityToSpawn = EntityTypes.CHICKEN;
         int entityAmount = 60;
         boolean gradualSpawnAfterExplosion = false;
 

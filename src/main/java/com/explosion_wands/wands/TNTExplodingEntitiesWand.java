@@ -10,6 +10,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.ClipContext;
@@ -74,7 +75,7 @@ public class TNTExplodingEntitiesWand {
                     ClipContext.Fluid.NONE,
                     player
             ));
-            EntityType<?> entityToSpawn = EntityType.CHICKEN;
+            EntityType<?> entityToSpawn = EntityTypes.CHICKEN;
             //For debugging purposes
             String entityType = "";
 
@@ -87,35 +88,35 @@ public class TNTExplodingEntitiesWand {
                 for (double theta = ExplosionEntities.theta; theta <= lessThanTheta; theta += incrementTheta) {
                     for (double phi = ExplosionEntities.phi; phi <= lessThanPhi; phi += incrementPhi) {
                         if (randomEntity <= spawnedEntities / 8 && spawnedEntities >= 0) {
-                            entityToSpawn = EntityType.CHICKEN;
+                            entityToSpawn = EntityTypes.CHICKEN;
                             entityType = entityToSpawn.toString();
                         }
                         if (randomEntity <= (spawnedEntities / 4) && randomEntity > (spawnedEntities / 8)) {
-                            entityToSpawn = EntityType.BREEZE;
+                            entityToSpawn = EntityTypes.BREEZE;
                             entityType = entityToSpawn.toString();
                         }
                         if (randomEntity <= (spawnedEntities / 8) * 2 + (spawnedEntities / 8) && randomEntity > (spawnedEntities / 4)) {
-                            entityToSpawn = EntityType.COW;
+                            entityToSpawn = EntityTypes.COW;
                             entityType = entityToSpawn.toString();
                         }
                         if (randomEntity <= spawnedEntities / 2 && randomEntity > (spawnedEntities / 8) * 2 + (spawnedEntities / 8)) {
-                            entityToSpawn = EntityType.BAT;
+                            entityToSpawn = EntityTypes.BAT;
                             entityType = entityToSpawn.toString();
                         }
                         if (randomEntity <= (spawnedEntities / 2) + (spawnedEntities / 8) && randomEntity > (spawnedEntities / 2)) {
-                            entityToSpawn = EntityType.ARMADILLO;
+                            entityToSpawn = EntityTypes.ARMADILLO;
                             entityType = entityToSpawn.toString();
                         }
                         if (randomEntity <= (spawnedEntities / 2) + (spawnedEntities / 4) && randomEntity > (spawnedEntities / 2) + (spawnedEntities / 8)) {
-                            entityToSpawn = EntityType.GOAT;
+                            entityToSpawn = EntityTypes.GOAT;
                             entityType = entityToSpawn.toString();
                         }
                         if (randomEntity <= spawnedEntities - (spawnedEntities / 8) && randomEntity > (spawnedEntities / 2) + (spawnedEntities / 4)) {
-                            entityToSpawn = EntityType.PIG;
+                            entityToSpawn = EntityTypes.PIG;
                             entityType = entityToSpawn.toString();
                         }
                         if (randomEntity <= spawnedEntities && randomEntity > spawnedEntities - (spawnedEntities / 8)) {
-                            entityToSpawn = EntityType.SNOW_GOLEM;
+                            entityToSpawn = EntityTypes.SNOW_GOLEM;
                             entityType = entityToSpawn.toString();
                         }
                         Entity entity = entityToSpawn.create(level, EntitySpawnReason.TRIGGERED);
